@@ -1,27 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Modal,
-  Alert,
-  SafeAreaView,
-  StatusBar,
-  Switch,
-} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import {
+  Alert,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+type Transaction = {
+  id: string | null;
+  description: string;
+  amount: string;
+  type: string;
+  category: string;
+  date: string;
+};
 
 const FinanceManagerApp = () => {
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budget, setBudget] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [budgetModalVisible, setBudgetModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentTransaction, setCurrentTransaction] = useState({
+  const [currentTransaction, setCurrentTransaction] = useState<Transaction>({
     id: null,
     description: '',
     amount: '',
@@ -61,7 +70,7 @@ const FinanceManagerApp = () => {
       overlay: 'rgba(0, 0, 0, 0.5)',
     },
     dark: {
-      primary: '#ff00b8', // Primary color for dark mode
+      primary: '#6603fc', // Primary color for dark mode
       background: '#121212',
       cardBackground: '#1e1e1e',
       text: '#ffffff',
@@ -80,12 +89,12 @@ const FinanceManagerApp = () => {
 
   const theme = isDarkMode ? colors.dark : colors.light;
 
-  const getCategoryIcon = (category) => {
+  const getCategoryIcon = (category: string) => {
     const cat = categories.find(c => c.key === category);
     return cat ? cat.icon : 'ellipsis-horizontal';
   };
 
-  const getCategoryLabel = (category) => {
+  const getCategoryLabel = (category: string) => {
     const cat = categories.find(c => c.key === category);
     return cat ? cat.label : 'Other';
   };
@@ -140,12 +149,12 @@ const FinanceManagerApp = () => {
     resetForm();
   };
 
-  const editTransaction = (transaction) => {
+  const editTransaction = (transaction: Transaction) => {
     setCurrentTransaction(transaction);
     setModalVisible(true);
   };
 
-  const deleteTransaction = (id) => {
+  const deleteTransaction = (id: string | null) => {
     Alert.alert(
       'Delete Transaction',
       'Are you sure you want to delete this transaction?',
@@ -184,8 +193,8 @@ const FinanceManagerApp = () => {
 
   const { income, expenses, balance, budgetRemaining } = calculateTotals();
 
-  const formatCurrency = (amount) => {
-    return `$${parseFloat(amount).toFixed(2)}`;
+  const formatCurrency = (amount: string | number) => {
+    return `$${parseFloat(amount.toString()).toFixed(2)}`;
   };
 
   const dynamicStyles = StyleSheet.create({
@@ -637,7 +646,7 @@ const FinanceManagerApp = () => {
                     { backgroundColor: transaction.type === 'income' ? '#e8f5e8' : '#ffebee' }
                   ]}>
                     <Ionicons 
-                      name={getCategoryIcon(transaction.category)} 
+                      name={getCategoryIcon(transaction.category) as React.ComponentProps<typeof Ionicons>['name']} 
                       size={20} 
                       color={transaction.type === 'income' ? theme.incomeColor : theme.expenseColor} 
                     />
@@ -812,7 +821,7 @@ const FinanceManagerApp = () => {
                     }
                   >
                     <Ionicons 
-                      name={category.icon} 
+                      name={category.icon as any} 
                       size={20} 
                       color={currentTransaction.category === category.key ? 'white' : theme.textSecondary} 
                     />
