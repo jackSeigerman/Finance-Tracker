@@ -23,6 +23,7 @@ type Transaction = {
   date: string;
 };
 
+
 const FinanceManagerApp = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budget, setBudget] = useState(0);
