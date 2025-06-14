@@ -54,9 +54,9 @@ const FinanceManagerApp = () => {
   // Color schemes
   const colors = {
     light: {
-      primary: '#ff0004', // Primary color for light mode
-      background: '#f5f5f5',
-      cardBackground: '#ffffff',
+      primary: '#64748b', // Primary color for light mode
+      background: '#f5f5f5', // background color for light mode
+      cardBackground: '#ffffff', // Card background color for light mode
       text: '#333333',
       textSecondary: '#666666',
       textTertiary: '#999999',
@@ -70,9 +70,9 @@ const FinanceManagerApp = () => {
       overlay: 'rgba(0, 0, 0, 0.5)',
     },
     dark: {
-      primary: '#6603fc', // Primary color for dark mode
-      background: '#121212',
-      cardBackground: '#1e1e1e',
+      primary: '#6b7280', // Primary color for dark mode
+      background: '#121212', // Background color for dark mode
+      cardBackground: '#1e1e1e', // Card background color for dark mode
       text: '#ffffff',
       textSecondary: '#b3b3b3',
       textTertiary: '#808080',
