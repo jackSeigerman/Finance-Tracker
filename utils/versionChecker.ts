@@ -1,5 +1,5 @@
 import version from '../version.json';
-const url = 'https://github.com/jackSeigerman/FinanceManagerReact/blob/Master/version.json';
+const url = 'https://raw.githubusercontent.com/jackSeigerman/FinanceManagerReact/refs/heads/Master/version.json';
 
 // returns a 0 if the local tag matches the remote tag,
 // returns a 1 if the local tag does not match the remote tag,  
@@ -10,6 +10,7 @@ export async function checkTagStatus(): Promise<0 | 1 | 2> {
     if (!response.ok) throw new Error('Non-200 response');
 
     const remoteTag = (await response.text()).trim();
+    console.log(`Remote tag: ${remoteTag}, Local version: ${version.version}`);
     return remoteTag === version.version ? 0 : 1;
   } catch (error) {
     return 2;
