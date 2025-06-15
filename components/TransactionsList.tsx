@@ -3,20 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 import { formatCurrency } from '../utils/format';
-
-interface Transaction {
-  id: string;
-  description: string;
-  amount: string;
-  type: 'income' | 'expense';
-  category: string;
-  date: string;
-}
+import { Transaction } from '@/utils/Transaction';
 
 interface TransactionsListProps {
   transactions: Transaction[];
   onEdit: (t: Transaction) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   onAdd: () => void;
 }
 

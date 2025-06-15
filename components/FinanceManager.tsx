@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
-import Header from './Header';
+import Header from "./Header";
 import Overview from './Overview';
 import TransactionsList from './TransactionsList';
 import TransactionModal from './TransactionModal';
@@ -36,7 +36,7 @@ const FinanceManager = () => {
         <Overview transactions={transactions} budget={budget} theme={theme} />
         <TransactionsList
           transactions={transactions}
-          theme={theme}
+          // theme={theme}
           onEdit={transactionHandlers.editTransaction}
           onDelete={transactionHandlers.deleteTransaction}
           onAdd={() => setModalVisible(true)}
@@ -47,7 +47,8 @@ const FinanceManager = () => {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         {...transactionHandlers}
-        useTheme={theme}
+        // useTheme={theme}
+        onSave={() => transactionHandlers.addOrUpdateTransaction()}
       />
 
       <BudgetModal
@@ -55,7 +56,7 @@ const FinanceManager = () => {
         onClose={() => setBudgetModalVisible(false)}
         setBudget={transactionHandlers.setBudget}
         currentBudget={budget}
-        useTheme={theme}
+        // useTheme={theme}
       />
 
       <SettingsModal
@@ -63,7 +64,7 @@ const FinanceManager = () => {
         onClose={() => setSettingsModalVisible(false)}
         isDarkMode={isDarkMode}
         setIsDarkMode={setIsDarkMode}
-        useTheme={theme}
+        // useTheme={theme}
       />
     </>
   );

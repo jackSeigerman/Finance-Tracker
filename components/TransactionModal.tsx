@@ -10,15 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
-
-interface Transaction {
-  id: string | null;
-  description: string;
-  amount: string;
-  type: 'income' | 'expense';
-  category: string;
-  date: string;
-}
+import { Transaction } from '@/utils/Transaction';
 
 interface TransactionModalProps {
   visible: boolean;
@@ -74,8 +66,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              value={currentTransaction.amount}
-              onChangeText={text => setCurrentTransaction({ ...currentTransaction, amount: text })}
+              value={currentTransaction.amount.toString()}
+              onChangeText={text => setCurrentTransaction({ ...currentTransaction, amount: parseFloat(text) })}
               placeholder="0.00"
               placeholderTextColor={theme.textTertiary}
               keyboardType="numeric"

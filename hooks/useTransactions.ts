@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../styles/theme';
-
-export interface Transaction {
-  id: string | null;
-  description: string;
-  amount: string;
-  type: 'income' | 'expense';
-  category: string;
-  date: string;
-}
+import { Transaction } from '@/utils/Transaction';
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -19,9 +11,9 @@ export const useTransactions = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [currentTransaction, setCurrentTransaction] = useState<Transaction>({
-    id: null,
+    id: 0,
     description: '',
-    amount: '',
+    amount: 0,
     type: 'expense',
     category: 'other',
     date: new Date().toISOString().split('T')[0],
@@ -29,9 +21,9 @@ export const useTransactions = () => {
 
   const resetForm = () => {
     setCurrentTransaction({
-      id: null,
+      id: 0,
       description: '',
-      amount: '',
+      amount: 0,
       type: 'expense',
       category: 'other',
       date: new Date().toISOString().split('T')[0],
@@ -44,7 +36,7 @@ export const useTransactions = () => {
       return;
     }
 
-    const amount = parseFloat(currentTransaction.amount);
+    const amount = currentTransaction.amount;
     if (isNaN(amount) || amount <= 0) {
       alert('Please enter a valid amount');
       return;
@@ -53,14 +45,14 @@ export const useTransactions = () => {
     if (currentTransaction.id) {
       setTransactions(prev =>
         prev.map(t =>
-          t.id === currentTransaction.id ? { ...currentTransaction, amount: amount.toString() } : t
+          t.id === currentTransaction.id ? { ...currentTransaction, amount: amount } : t
         )
       );
     } else {
       const newTransaction = {
         ...currentTransaction,
-        id: Date.now().toString(),
-        amount: amount.toString(),
+        id: Date.now(),
+        amount: amount,
       };
       setTransactions(prev => [newTransaction, ...prev]);
     }
@@ -74,7 +66,7 @@ export const useTransactions = () => {
     setModalVisible(true);
   };
 
-  const deleteTransaction = (id: string | null) => {
+  const deleteTransaction = (id: number) => {
     if (!id) return;
     setTransactions(prev => prev.filter(t => t.id !== id));
   };

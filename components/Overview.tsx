@@ -3,11 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { formatCurrency } from '../utils/format';
 import { useTheme } from '../styles/theme';
-
-interface Transaction {
-  type: 'income' | 'expense';
-  amount: string;
-}
+import { Transaction } from '@/utils/Transaction';
 
 interface OverviewProps {
   transactions: Transaction[];
@@ -20,11 +16,11 @@ const Overview: React.FC<OverviewProps> = ({ transactions, budget }) => {
 
   const income = transactions
     .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    .reduce((sum, t) => sum + t.amount, 0);
 
   const expenses = transactions
     .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    .reduce((sum, t) => sum + t.amount, 0);
 
   const balance = income - expenses;
   const budgetRemaining = budget - expenses;
