@@ -3,30 +3,30 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 // Define theme colors
 export const colors = {
   light: {
-    primary: '#007AFF',
-    background: '#F2F2F7',
-    cardBackground: '#FFFFFF',
+    primary: '#64748b', // Primary color for light mode
+    background: '#f5f5f5', // background color for light mode
+    cardBackground: '#ffffff', // Card background color for light mode
     inputBackground: '#F2F2F7',
-    text: '#000000',
+    text: '#333333',
     textSecondary: '#666666',
     textTertiary: '#999999',
-    border: '#E5E5EA',
+    border: '#e0e0e0',
     overlay: 'rgba(0, 0, 0, 0.5)',
-    incomeColor: '#34C759',
-    expenseColor: '#FF3B30',
+    incomeColor: '#4CAF50', // Green for income
+    expenseColor: '#f44336', // Red for expenses
   },
   dark: {
-    primary: '#0A84FF',
-    background: '#000000',
-    cardBackground: '#1C1C1E',
+    primary: '#6b7280', // Primary color for dark mode
+    background: '#121212', // Background color for dark mode
+    cardBackground: '#1e1e1e', // Card background color for dark mode
     inputBackground: '#2C2C2E',
-    text: '#FFFFFF',
-    textSecondary: '#AEAEB2',
-    textTertiary: '#636366',
-    border: '#38383A',
+    text: '#ffffff',
+    textSecondary: '#b3b3b3',
+    textTertiary: '#808080',
+    border: '#333333',
     overlay: 'rgba(0, 0, 0, 0.7)',
-    incomeColor: '#30D158',
-    expenseColor: '#FF453A',
+    incomeColor: '#4CAF50', // Green for income
+    expenseColor: '#f44336', // Red for expenses
   },
 };
 
