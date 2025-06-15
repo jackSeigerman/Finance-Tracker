@@ -9,11 +9,13 @@ export async function checkTagStatus(): Promise<0 | 1 | 2> {
     const response = await fetch(url, { cache: 'no-store' }); // avoid caching
     if (!response.ok) throw new Error('Non-200 response');
 
-    const remoteTag = (await response.text()).trim();
-    console.log(`Remote tag: ${remoteTag}, Local version: ${version.version}`);
-    return remoteTag === version.version ? 0 : 1;
+    const encoded = (await response.text()).trim();
+
+    const remoteTag = JSON.parse(encoded);
+
+    console.log(`Remote tag: ${remoteTag.version}, Local version: ${version.version}`);
+    return remoteTag.version === version.version ? 0 : 1;
   } catch (error) {
     return 2;
   }
 }
-
