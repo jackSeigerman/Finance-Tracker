@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 
@@ -37,6 +37,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 thumbColor={isDarkMode ? '#ffffff' : '#f4f3f4'}
                 ios_backgroundColor={theme.border}
               />
+            </View>
+          </View>
+          <View style={styles.content}>
+            <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
+              <View>
+                <Text style={[styles.label, { color: theme.text }]}>Github</Text>
+                <Text style={[styles.description, { color: theme.textSecondary }]}>
+                  See more on my Github
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  // Open Github link
+                  return Linking.openURL("www.github.com/jackSeigerman");
+                }}
+                style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: theme.primary, borderRadius: 6 }}
+              >
+                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Github</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
