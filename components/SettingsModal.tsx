@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet, Linking } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet, Linking, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 
@@ -49,19 +49,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
               </View>
               <TouchableOpacity
                 onPress={async () => {
-                  // Open Github link
+                  const webUrl = "https://www.github.com/jackSeigerman";
+                  const appUrl = "github://user?username=jackSeigerman";
+
+                  if (Platform.OS === 'web') {
+                    // Web: just open the browser
+                    window.open(webUrl, '_blank');
+                  } else {
+                    // Mobile: try GitHub app first, then fallback
                     try {
-                        const supported = await Linking.canOpenURL("github://user?username=jackSeigerman");
-                        if (supported) {
-                        return Linking.openURL("github://user?username=jackSeigerman");
-                        } else {
-                        return Linking.openURL("https://www.github.com/jackSeigerman");
-                        }
-                        } catch (error) {
-                        console.error('Error opening link:', error);
-                        }
+                      const supported = await Linking.canOpenURL(appUrl);
+                      if (supported) {
+                        await Linking.openURL(appUrl);
+                      } else {
+                        await Linking.openURL(webUrl);
+                      }
+                    } catch (error) {
+                      console.error('Error opening link:', error);
+                    }
+                  }
                 }}
-                style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: theme.primary, borderRadius: 6 }}
+                style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  backgroundColor: theme.primary,
+                  borderRadius: 6
+                }}
               >
                 <Text style={{ color: '#fff', fontWeight: 'bold' }}>Github</Text>
               </TouchableOpacity>
