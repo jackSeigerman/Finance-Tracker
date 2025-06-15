@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { checkTagStatus } from '../utils/versionChecker';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, Alert } from 'react-native';
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -18,10 +18,19 @@ export default function RootLayout() {
     async function checkForUpdates() {
       const status = await checkTagStatus();
       if (status === 1) {
-        setErrorMessage('A new version of Finance Manager is available.');
+        if (Platform.OS === 'web') {
+          setErrorMessage('A new version of Finance Manager is available.');
+        }
+        else {
+          Alert.alert('A new version of Finance Manager is available. Please update the app.');
+        }
         console.log(status);
       } else if (status === 2) {
-        setErrorMessage('Error checking for updates. Check your internet connection.');
+        if (Platform.OS === 'web') {
+          setErrorMessage('Error checking for updates. Check your internet connection.');
+        } else {
+          Alert.alert('Error checking for updates. Check your internet connection and try again later.');
+        }
         console.log(status);
       }
     }
