@@ -48,9 +48,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 </Text>
               </View>
               <TouchableOpacity
-                onPress={() => {
+                onPress={async () => {
                   // Open Github link
-                  return Linking.openURL("www.github.com/jackSeigerman");
+                    try {
+                        const supported = await Linking.canOpenURL("github://user?username=jackSeigerman");
+                        if (supported) {
+                        return Linking.openURL("github://user?username=jackSeigerman");
+                        } else {
+                        return Linking.openURL("https://www.github.com/jackSeigerman");
+                        }
+                        } catch (error) {
+                        console.error('Error opening link:', error);
+                        }
                 }}
                 style={{ paddingHorizontal: 16, paddingVertical: 8, backgroundColor: theme.primary, borderRadius: 6 }}
               >
