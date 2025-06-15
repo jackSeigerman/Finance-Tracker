@@ -7,15 +7,12 @@ import TransactionModal from './TransactionModal';
 import BudgetModal from './BudgetModal';
 import SettingsModal from './SettingsModal';
 import { useTransactions } from '../hooks/useTransactions';
-import { useTheme } from '../styles/theme';
+
 
 const FinanceManager = () => {
   const {
     transactions,
     budget,
-    theme,
-    isDarkMode,
-    setIsDarkMode,
     modalVisible,
     setModalVisible,
     budgetModalVisible,
@@ -33,10 +30,9 @@ const FinanceManager = () => {
       />
 
       <ScrollView>
-        <Overview transactions={transactions} budget={budget} theme={theme} />
+        <Overview transactions={transactions} budget={budget} />
         <TransactionsList
           transactions={transactions}
-          // theme={theme}
           onEdit={transactionHandlers.editTransaction}
           onDelete={transactionHandlers.deleteTransaction}
           onAdd={() => setModalVisible(true)}
@@ -47,8 +43,7 @@ const FinanceManager = () => {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         {...transactionHandlers}
-        // useTheme={theme}
-        onSave={() => transactionHandlers.addOrUpdateTransaction()}
+        onSave={transactionHandlers.addOrUpdateTransaction}
       />
 
       <BudgetModal
@@ -56,15 +51,11 @@ const FinanceManager = () => {
         onClose={() => setBudgetModalVisible(false)}
         setBudget={transactionHandlers.setBudget}
         currentBudget={budget}
-        // useTheme={theme}
       />
 
       <SettingsModal
         visible={settingsModalVisible}
         onClose={() => setSettingsModalVisible(false)}
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-        // useTheme={theme}
       />
     </>
   );
