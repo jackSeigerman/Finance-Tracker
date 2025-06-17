@@ -50,6 +50,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
             </TouchableOpacity>
           </View>
           
+
+
           <View style={styles.content}>
             <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
               <View>
@@ -67,6 +69,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
               />
             </View>
 
+
+
             {onClearData && (
               <View style={[styles.settingItem, { borderBottomWidth: 0 }]}>
                 <View>
@@ -83,6 +87,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
                 </TouchableOpacity>
               </View>
             )}
+
 
 
             <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
@@ -118,6 +123,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
                 <Text style={styles.actionButtonText}>Github</Text>
               </TouchableOpacity>
             </View>
+
+
+            
           </View>
         </View>
       </View>
