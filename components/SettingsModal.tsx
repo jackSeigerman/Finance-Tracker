@@ -1,15 +1,43 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet, Linking, Platform } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet, Linking, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 
 interface SettingsModalProps {
   visible: boolean;
   onClose: () => void;
+  onClearData?: () => Promise<void>;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClearData }) => {
   const { theme, isDarkMode, toggleTheme } = useTheme();
+
+  const handleClearData = () => {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(
+        'Are you sure you want to clear all data? This action cannot be undone.'
+      );
+      if (confirmed && onClearData) {
+        onClearData();
+      }
+    } else {
+      Alert.alert(
+        'Clear All Data',
+        'Are you sure you want to clear all data? This action cannot be undone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Clear',
+            style: 'destructive',
+            onPress: () => onClearData?.(),
+          },
+        ]
+      );
+    }
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
@@ -38,8 +66,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 ios_backgroundColor={theme.border}
               />
             </View>
-          </View>
-          <View style={styles.content}>
+
+            {onClearData && (
+              <View style={[styles.settingItem, { borderBottomWidth: 0 }]}>
+                <View>
+                  <Text style={[styles.label, { color: theme.text }]}>Clear All Data</Text>
+                  <Text style={[styles.description, { color: theme.textSecondary }]}>
+                    Clear all Cookies
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={handleClearData}
+                  style={[styles.actionButton, { backgroundColor: theme.expenseColor }]}
+                >
+                  <Text style={styles.actionButtonText}>Clear</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+
             <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
               <View>
                 <Text style={[styles.label, { color: theme.text }]}>Github</Text>
@@ -47,16 +92,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                   See more on my Github
                 </Text>
               </View>
+              
               <TouchableOpacity
                 onPress={async () => {
                   const webUrl = "https://www.github.com/jackSeigerman";
                   const appUrl = "github://user?username=jackSeigerman";
 
                   if (Platform.OS === 'web') {
-                    // Web: just open the browser
                     window.open(webUrl, '_blank');
                   } else {
-                    // Mobile: try GitHub app first, then fallback
                     try {
                       const supported = await Linking.canOpenURL(appUrl);
                       if (supported) {
@@ -69,14 +113,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                     }
                   }
                 }}
-                style={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
-                  backgroundColor: theme.primary,
-                  borderRadius: 6
-                }}
+                style={[styles.actionButton, { backgroundColor: theme.primary }]}
               >
-                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Github</Text>
+                <Text style={styles.actionButtonText}>Github</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -132,6 +171,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
     opacity: 0.7,
+  },
+  actionButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  actionButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

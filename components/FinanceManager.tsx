@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView } from 'react-native';
+import React from 'react';
+import { ScrollView, View, ActivityIndicator, StyleSheet } from 'react-native';
 import Header from "./Header";
 import Overview from './Overview';
 import TransactionsList from './TransactionsList';
@@ -7,9 +7,10 @@ import TransactionModal from './TransactionModal';
 import BudgetModal from './BudgetModal';
 import SettingsModal from './SettingsModal';
 import { useTransactions } from '../hooks/useTransactions';
-
+import { useTheme } from '../styles/theme';
 
 const FinanceManager = () => {
+  const { theme, isLoading: themeLoading } = useTheme();
   const {
     transactions,
     budget,
@@ -19,8 +20,18 @@ const FinanceManager = () => {
     setBudgetModalVisible,
     settingsModalVisible,
     setSettingsModalVisible,
+    isLoading: dataLoading,
     ...transactionHandlers
   } = useTransactions();
+
+  // Show loading indicator while data is being loaded
+  if (themeLoading || dataLoading) {
+    return (
+      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -56,9 +67,18 @@ const FinanceManager = () => {
       <SettingsModal
         visible={settingsModalVisible}
         onClose={() => setSettingsModalVisible(false)}
+        onClearData={transactionHandlers.clearAllData}
       />
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default FinanceManager;

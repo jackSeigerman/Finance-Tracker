@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useTheme } from '../styles/theme';
+import { useState, useEffect } from 'react';
 import { Transaction } from '@/utils/Transaction';
+import { storageManager } from '../utils/storage';
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [budget, setBudget] = useState(0);
+  const [budget, setBudgetState] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [budgetModalVisible, setBudgetModalVisible] = useState(false);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [currentTransaction, setCurrentTransaction] = useState<Transaction>({
     id: 0,
@@ -18,6 +18,45 @@ export const useTransactions = () => {
     category: 'other',
     date: new Date().toISOString().split('T')[0],
   });
+
+  // Load data on mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [savedTransactions, savedBudget] = await Promise.all([
+          storageManager.loadTransactions(),
+          storageManager.loadBudget(),
+        ]);
+
+        setTransactions(savedTransactions);
+        setBudgetState(savedBudget);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // Save transactions whenever they change
+  useEffect(() => {
+    if (!isLoading) {
+      storageManager.saveTransactions(transactions).catch(error => {
+        console.error('Error saving transactions:', error);
+      });
+    }
+  }, [transactions, isLoading]);
+
+  // Save budget whenever it changes
+  useEffect(() => {
+    if (!isLoading) {
+      storageManager.saveBudget(budget).catch(error => {
+        console.error('Error saving budget:', error);
+      });
+    }
+  }, [budget, isLoading]);
 
   const resetForm = () => {
     setCurrentTransaction({
@@ -71,7 +110,20 @@ export const useTransactions = () => {
     setTransactions(prev => prev.filter(t => t.id !== id));
   };
 
-  const theme = isDarkMode ? useTheme().colors.dark : useTheme().colors.light;
+  const setBudget = (newBudget: number) => {
+    setBudgetState(newBudget);
+  };
+
+  // Clear all data
+  const clearAllData = async () => {
+    try {
+      await storageManager.clearAll();
+      setTransactions([]);
+      setBudgetState(0);
+    } catch (error) {
+      console.error('Error clearing data:', error);
+    }
+  };
 
   return {
     transactions,
@@ -84,14 +136,13 @@ export const useTransactions = () => {
     setBudgetModalVisible,
     settingsModalVisible,
     setSettingsModalVisible,
-    isDarkMode,
-    setIsDarkMode,
     currentTransaction,
     setCurrentTransaction,
     addOrUpdateTransaction,
     editTransaction,
     deleteTransaction,
     resetForm,
-    theme,
+    clearAllData,
+    isLoading,
   };
 };
