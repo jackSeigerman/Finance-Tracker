@@ -66,6 +66,14 @@ const TransactionsList: React.FC<TransactionsListProps> = ({ transactions, onEdi
                   size={20}
                   color={transaction.type === 'income' ? theme.incomeColor : theme.expenseColor}
                 />
+                {transaction.isRecurring && (
+                  <Ionicons
+                    name="repeat"
+                    size={16}
+                    color={theme.primary}
+                    style={{ marginLeft: -8, marginTop: 16 }}
+                  />
+                )}
               </View>
               <View style={styles.details}>
                 <Text style={[styles.description, { color: theme.text }]}>{transaction.description}</Text>

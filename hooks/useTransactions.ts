@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Transaction } from '@/utils/Transaction';
 import { storageManager } from '../utils/storage';
+import { addDays, addWeeks, addMonths, addYears, isBefore, parseISO, format } from 'date-fns';
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -57,6 +58,61 @@ export const useTransactions = () => {
       });
     }
   }, [budget, isLoading]);
+
+  // Recurring transaction logic
+  useEffect(() => {
+    if (isLoading) return;
+    const processRecurring = async () => {
+      let updated = false;
+      let updatedTransactions = [...transactions];
+      const today = format(new Date(), 'yyyy-MM-dd');
+      for (const t of transactions) {
+        if (t.isRecurring && t.nextOccurrence && (!t.recurrenceEndDate || isBefore(parseISO(t.nextOccurrence), parseISO(t.recurrenceEndDate) || new Date('9999-12-31')))) {
+          let next = t.nextOccurrence;
+          while (next && next <= today) {
+            // Generate a new transaction for this occurrence
+            const newTx = {
+              ...t,
+              id: Date.now() + Math.floor(Math.random() * 10000),
+              date: next,
+              isRecurring: false, // generated instance is not recurring
+              recurrence: undefined,
+              recurrenceEndDate: undefined,
+              nextOccurrence: undefined,
+            };
+            updatedTransactions = [newTx, ...updatedTransactions];
+            // Calculate next occurrence
+            let nextDate = parseISO(next);
+            switch (t.recurrence) {
+              case 'daily':
+                nextDate = addDays(nextDate, 1);
+                break;
+              case 'weekly':
+                nextDate = addWeeks(nextDate, 1);
+                break;
+              case 'monthly':
+                nextDate = addMonths(nextDate, 1);
+                break;
+              case 'yearly':
+                nextDate = addYears(nextDate, 1);
+                break;
+              default:
+                nextDate = null;
+            }
+            next = nextDate ? format(nextDate, 'yyyy-MM-dd') : undefined;
+            // Update the recurring transaction's nextOccurrence
+            t.nextOccurrence = next;
+            updated = true;
+          }
+        }
+      }
+      if (updated) {
+        setTransactions(updatedTransactions);
+      }
+    };
+    processRecurring();
+    // eslint-disable-next-line
+  }, [isLoading]);
 
   const resetForm = () => {
     setCurrentTransaction({
