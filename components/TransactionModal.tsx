@@ -74,8 +74,18 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              value={currentTransaction.amount.toString()}
-              onChangeText={text => setCurrentTransaction({ ...currentTransaction, amount: parseFloat(text) })}
+              value={
+                isNaN(currentTransaction.amount) || currentTransaction.amount === null || currentTransaction.amount === undefined
+                  ? ''
+                  : currentTransaction.amount.toString()
+              }
+              onChangeText={text => {
+                const parsed = parseFloat(text);
+                setCurrentTransaction({
+                  ...currentTransaction,
+                  amount: text === '' ? 0 : parsed,
+                });
+              }}
               placeholder="0.00"
               placeholderTextColor={theme.textTertiary}
               keyboardType="numeric"
