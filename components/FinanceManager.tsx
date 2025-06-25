@@ -27,7 +27,6 @@ const FinanceManager = () => {
     ...transactionHandlers
   } = useTransactions();
 
-  // Show loading indicator while data is being loaded
   if (themeLoading || dataLoading) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
@@ -36,42 +35,8 @@ const FinanceManager = () => {
     );
   }
 
-  // Debug panel for date override (only in development)
-  const isDev = __DEV__ || process.env.NODE_ENV === 'development';
-
   return (
     <>
-      {isDev && (
-        <View style={{ padding: 12, backgroundColor: theme.cardBackground, borderBottomWidth: 1, borderColor: theme.border }}>
-          <Text style={{ color: theme.text, fontWeight: 'bold', marginBottom: 4 }}>Debug: Set Current Date</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TextInput
-              style={{
-                borderWidth: 1,
-                borderColor: theme.border,
-                borderRadius: 6,
-                padding: 8,
-                color: theme.text,
-                backgroundColor: theme.inputBackground,
-                minWidth: 120,
-                marginRight: 8,
-              }}
-              value={debugDate || currentDate}
-              onChangeText={setDebugDate}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={theme.textTertiary}
-            />
-            <TouchableOpacity
-              onPress={() => setDebugDate(null)}
-              style={{ marginLeft: 8, padding: 8, backgroundColor: theme.primary, borderRadius: 6 }}
-            >
-              <Text style={{ color: 'white', fontWeight: 'bold' }}>Reset</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={{ color: theme.textSecondary, marginTop: 4 }}>Current simulated date: {currentDate}</Text>
-        </View>
-      )}
-
       <Header
         onOpenSettings={() => setSettingsModalVisible(true)}
         onOpenBudget={() => setBudgetModalVisible(true)}
