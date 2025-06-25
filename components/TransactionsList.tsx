@@ -61,17 +61,17 @@ const TransactionsList: React.FC<TransactionsListProps> = ({ transactions, onEdi
                   backgroundColor: transaction.type === 'income' ? '#e8f5e8' : '#ffebee',
                 }]}
               >
-                <Ionicons
-                  name={categoryIcons[transaction.category] || 'ellipsis-horizontal'}
-                  size={20}
-                  color={transaction.type === 'income' ? theme.incomeColor : theme.expenseColor}
-                />
-                {transaction.isRecurring && (
+                {transaction.isRecurring ? (
                   <Ionicons
                     name="repeat"
-                    size={16}
+                    size={20}
                     color={theme.primary}
-                    style={{ marginLeft: -8, marginTop: 16 }}
+                  />
+                ) : (
+                  <Ionicons
+                    name={categoryIcons[transaction.category] || 'ellipsis-horizontal'}
+                    size={20}
+                    color={transaction.type === 'income' ? theme.incomeColor : theme.expenseColor}
                   />
                 )}
               </View>
