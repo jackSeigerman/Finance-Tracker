@@ -76,32 +76,44 @@ export const useTransactions = () => {
     }
   }, [budget, isLoading]);
 
-  // Recurring transaction logic (run on date change as well)
   useEffect(() => {
     if (isLoading) return;
     console.log('[Recurring Debug] Running processRecurring for date:', currentDate);
     const processRecurring = async () => {
       let updated = false;
       let updatedTransactions = [...transactions];
-      const today = currentDate; // Use simulated date for all logic
+      const today = currentDate;
       for (const t of transactions) {
         if (t.isRecurring && t.nextOccurrence && (!t.recurrenceEndDate || isBefore(parseISO(t.nextOccurrence), parseISO(t.recurrenceEndDate) || new Date('9999-12-31')))) {
           let next = t.nextOccurrence;
           console.log('[Recurring Debug] Checking transaction:', t.description, t);
           while (next && next <= today) {
-            console.log('[Recurring Debug] Generating new transaction for', t.description, 'on', next);
-            // Generate a new transaction for this occurrence
-            const newTx = {
-              ...t,
-              id: Date.now() + Math.floor(Math.random() * 10000),
-              date: next,
-              isRecurring: true, // ensure recurring icon is always shown
-              recurrence: undefined,
-              recurrenceEndDate: undefined,
-              nextOccurrence: undefined,
-            };
-            updatedTransactions = [newTx, ...updatedTransactions];
-            // Calculate next occurrence
+            const alreadyExists = updatedTransactions.some(
+              tx =>
+                tx.date === next &&
+                tx.isRecurring &&
+                tx.recurrence === undefined &&
+                tx.recurrenceEndDate === undefined &&
+                tx.nextOccurrence === undefined &&
+                tx.description === t.description &&
+                tx.amount === t.amount &&
+                tx.type === t.type &&
+                tx.category === t.category
+            );
+            if (!alreadyExists) {
+              console.log('[Recurring Debug] Generating new transaction for', t.description, 'on', next);
+              const newTx = {
+                ...t,
+                id: Date.now() + Math.floor(Math.random() * 10000),
+                date: next,
+                isRecurring: true,
+                recurrence: undefined,
+                recurrenceEndDate: undefined,
+                nextOccurrence: undefined,
+              };
+              updatedTransactions = [newTx, ...updatedTransactions];
+              updated = true;
+            }
             let nextDate = parseISO(next);
             switch (t.recurrence) {
               case 'daily':
@@ -122,7 +134,6 @@ export const useTransactions = () => {
             next = nextDate ? format(nextDate, 'yyyy-MM-dd') : '';
             // Update the recurring transaction's nextOccurrence
             t.nextOccurrence = next;
-            updated = true;
           }
         }
       }
