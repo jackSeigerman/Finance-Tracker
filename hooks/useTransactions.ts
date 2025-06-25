@@ -20,6 +20,19 @@ export const useTransactions = () => {
     date: new Date().toISOString().split('T')[0],
   });
 
+  const [currentDate, setCurrentDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = format(new Date(), 'yyyy-MM-dd');
+      setCurrentDate(prev => {
+        if (prev !== now) return now;
+        return prev;
+      });
+    }, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Load data on mount
   useEffect(() => {
     const loadData = async () => {
@@ -59,7 +72,7 @@ export const useTransactions = () => {
     }
   }, [budget, isLoading]);
 
-  // Recurring transaction logic
+  // Recurring transaction logic (run on date change as well)
   useEffect(() => {
     if (isLoading) return;
     const processRecurring = async () => {
@@ -112,7 +125,7 @@ export const useTransactions = () => {
     };
     processRecurring();
     // eslint-disable-next-line
-  }, [isLoading]);
+  }, [isLoading, currentDate]);
 
   const resetForm = () => {
     setCurrentTransaction({
