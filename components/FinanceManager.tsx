@@ -21,9 +21,9 @@ const FinanceManager = () => {
     settingsModalVisible,
     setSettingsModalVisible,
     isLoading: dataLoading,
-    setDebugDate,
-    debugDate,
-    currentDate,
+    // setDebugDate,
+    // debugDate,
+    // currentDate,
     ...transactionHandlers
   } = useTransactions();
 
