@@ -22,6 +22,9 @@ export const useTransactions = () => {
 
   const [currentDate, setCurrentDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
+  // Debug: allow manual override of current date
+  const [debugDate, setDebugDate] = useState<string | null>(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const now = format(new Date(), 'yyyy-MM-dd');
@@ -75,14 +78,17 @@ export const useTransactions = () => {
   // Recurring transaction logic (run on date change as well)
   useEffect(() => {
     if (isLoading) return;
+    console.log('[Recurring Debug] Running processRecurring for date:', currentDate);
     const processRecurring = async () => {
       let updated = false;
       let updatedTransactions = [...transactions];
-      const today = format(new Date(), 'yyyy-MM-dd');
+      const today = currentDate; // Use simulated date for all logic
       for (const t of transactions) {
         if (t.isRecurring && t.nextOccurrence && (!t.recurrenceEndDate || isBefore(parseISO(t.nextOccurrence), parseISO(t.recurrenceEndDate) || new Date('9999-12-31')))) {
           let next = t.nextOccurrence;
+          console.log('[Recurring Debug] Checking transaction:', t.description, t);
           while (next && next <= today) {
+            console.log('[Recurring Debug] Generating new transaction for', t.description, 'on', next);
             // Generate a new transaction for this occurrence
             const newTx = {
               ...t,
@@ -120,12 +126,20 @@ export const useTransactions = () => {
         }
       }
       if (updated) {
+        console.log('[Recurring Debug] setTransactions with new transactions:', updatedTransactions);
         setTransactions(updatedTransactions);
+      } else {
+        console.log('[Recurring Debug] No new recurring transactions generated.');
       }
     };
     processRecurring();
     // eslint-disable-next-line
   }, [isLoading, currentDate]);
+
+  // If debugDate is set, use it as the current date
+  useEffect(() => {
+    if (debugDate) setCurrentDate(debugDate);
+  }, [debugDate]);
 
   const resetForm = () => {
     setCurrentTransaction({
@@ -213,5 +227,9 @@ export const useTransactions = () => {
     resetForm,
     clearAllData,
     isLoading,
+    // Debug feature
+    setDebugDate,
+    debugDate,
+    currentDate,
   };
 };

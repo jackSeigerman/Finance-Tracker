@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { ScrollView, View, ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import Header from "./Header";
 import Overview from './Overview';
 import TransactionsList from './TransactionsList';
@@ -21,6 +21,9 @@ const FinanceManager = () => {
     settingsModalVisible,
     setSettingsModalVisible,
     isLoading: dataLoading,
+    setDebugDate,
+    debugDate,
+    currentDate,
     ...transactionHandlers
   } = useTransactions();
 
@@ -33,8 +36,42 @@ const FinanceManager = () => {
     );
   }
 
+  // Debug panel for date override (only in development)
+  const isDev = __DEV__ || process.env.NODE_ENV === 'development';
+
   return (
     <>
+      {isDev && (
+        <View style={{ padding: 12, backgroundColor: theme.cardBackground, borderBottomWidth: 1, borderColor: theme.border }}>
+          <Text style={{ color: theme.text, fontWeight: 'bold', marginBottom: 4 }}>Debug: Set Current Date</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderColor: theme.border,
+                borderRadius: 6,
+                padding: 8,
+                color: theme.text,
+                backgroundColor: theme.inputBackground,
+                minWidth: 120,
+                marginRight: 8,
+              }}
+              value={debugDate || currentDate}
+              onChangeText={setDebugDate}
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor={theme.textTertiary}
+            />
+            <TouchableOpacity
+              onPress={() => setDebugDate(null)}
+              style={{ marginLeft: 8, padding: 8, backgroundColor: theme.primary, borderRadius: 6 }}
+            >
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>Reset</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={{ color: theme.textSecondary, marginTop: 4 }}>Current simulated date: {currentDate}</Text>
+        </View>
+      )}
+
       <Header
         onOpenSettings={() => setSettingsModalVisible(true)}
         onOpenBudget={() => setBudgetModalVisible(true)}
