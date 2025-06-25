@@ -23,9 +23,10 @@ export const useTransactions = () => {
   const [currentDate, setCurrentDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
   // Debug: allow manual override of current date
-  const [debugDate, setDebugDate] = useState<string | null>(null);
+  // const [debugDate, setDebugDate] = useState<string | null>(null); // Hide debug
 
   useEffect(() => {
+    // Always use the real date
     const interval = setInterval(() => {
       const now = format(new Date(), 'yyyy-MM-dd');
       setCurrentDate(prev => {
@@ -94,7 +95,7 @@ export const useTransactions = () => {
               ...t,
               id: Date.now() + Math.floor(Math.random() * 10000),
               date: next,
-              isRecurring: false, // generated instance is not recurring
+              isRecurring: true, // ensure recurring icon is always shown
               recurrence: undefined,
               recurrenceEndDate: undefined,
               nextOccurrence: undefined,
@@ -135,11 +136,6 @@ export const useTransactions = () => {
     processRecurring();
     // eslint-disable-next-line
   }, [isLoading, currentDate]);
-
-  // If debugDate is set, use it as the current date
-  useEffect(() => {
-    if (debugDate) setCurrentDate(debugDate);
-  }, [debugDate]);
 
   const resetForm = () => {
     setCurrentTransaction({
@@ -227,9 +223,9 @@ export const useTransactions = () => {
     resetForm,
     clearAllData,
     isLoading,
-    // Debug feature
-    setDebugDate,
-    debugDate,
-    currentDate,
+    // Debug feature (hidden)
+    // setDebugDate,
+    // debugDate,
+    // currentDate,
   };
 };
