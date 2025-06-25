@@ -97,9 +97,9 @@ export const useTransactions = () => {
                 nextDate = addYears(nextDate, 1);
                 break;
               default:
-                nextDate = null;
+                break;
             }
-            next = nextDate ? format(nextDate, 'yyyy-MM-dd') : undefined;
+            next = nextDate ? format(nextDate, 'yyyy-MM-dd') : '';
             // Update the recurring transaction's nextOccurrence
             t.nextOccurrence = next;
             updated = true;
