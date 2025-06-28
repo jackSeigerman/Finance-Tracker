@@ -9,6 +9,7 @@ const STORAGE_KEYS = {
   TRANSACTIONS: 'finance_manager_transactions',
   BUDGET: 'finance_manager_budget',
   THEME: 'finance_manager_theme',
+  RECURRING_TRANSACTIONS: 'finance_manager_recurring_transactions',
 };
 
 // Cross-platform storage utility
