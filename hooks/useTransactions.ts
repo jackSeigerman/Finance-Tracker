@@ -79,67 +79,97 @@ export const useTransactions = () => {
   useEffect(() => {
     if (isLoading) return;
     console.log('[Recurring Debug] Running processRecurring for date:', currentDate);
-    const processRecurring = async () => {
-      let updated = false;
-      let updatedTransactions = [...transactions];
+    
+    const processRecurring = () => {
       const today = currentDate;
-      for (const t of transactions) {
-        if (t.isRecurring && t.nextOccurrence && (!t.recurrenceEndDate || isBefore(parseISO(t.nextOccurrence), parseISO(t.recurrenceEndDate) || new Date('9999-12-31')))) {
-          let next = t.nextOccurrence;
-          console.log('[Recurring Debug] Checking transaction:', t.description, t);
-          while (next && next <= today) {
-            const alreadyExists = updatedTransactions.some(
-              tx =>
-                tx.date === next &&
-                tx.isRecurring &&
-                tx.recurrence === undefined &&
-                tx.recurrenceEndDate === undefined &&
-                tx.nextOccurrence === undefined &&
-                tx.description === t.description &&
-                tx.amount === t.amount &&
-                tx.type === t.type &&
-                tx.category === t.category
-            );
-            if (!alreadyExists) {
-              console.log('[Recurring Debug] Generating new transaction for', t.description, 'on', next);
-              const newTx = {
-                ...t,
-                id: crypto.randomUUID(),
-                date: next,
-                isRecurring: true,
-                recurrence: undefined,
-                recurrenceEndDate: undefined,
-                nextOccurrence: undefined,
-              };
-              updatedTransactions = [newTx, ...updatedTransactions];
-              updated = true;
-            }
-            let nextDate = parseISO(next);
-            switch (t.recurrence) {
-              case 'daily':
-                nextDate = addDays(nextDate, 1);
-                break;
-              case 'weekly':
-                nextDate = addWeeks(nextDate, 1);
-                break;
-              case 'monthly':
-                nextDate = addMonths(nextDate, 1);
-                break;
-              case 'yearly':
-                nextDate = addYears(nextDate, 1);
-                break;
-              default:
-                break;
-            }
-            next = nextDate ? format(nextDate, 'yyyy-MM-dd') : '';
-            // Update the recurring transaction's nextOccurrence
-            t.nextOccurrence = next;
-          }
-        }
+      
+      // Identify recurring transactions that need processing
+      const recurringTransactions = transactions.filter(t => 
+        t.isRecurring && 
+        t.nextOccurrence && 
+        (!t.recurrenceEndDate || isBefore(parseISO(t.nextOccurrence), parseISO(t.recurrenceEndDate) || new Date('9999-12-31')))
+      );
+      
+      if (recurringTransactions.length === 0) {
+        console.log('[Recurring Debug] No recurring transactions to process.');
+        return;
       }
-      if (updated) {
-        console.log('[Recurring Debug] setTransactions with new transactions:', updatedTransactions);
-        setTransactions(updatedTransactions);
+      
+      // Create lookup map for faster duplicate checking
+      const existingTransactionMap = new Map();
+      
+      // Create unique key for each transaction to check for duplicates
+      transactions.forEach(tx => {
+        if (tx.isRecurring && tx.recurrence === undefined) {
+          const key = `${tx.date}|${tx.description}|${tx.amount}|${tx.type}|${tx.category}`;
+          existingTransactionMap.set(key, true);
+        }
+      });
+      
+      // Process recurring transactions
+      const newTransactions = [];
+      const updatedTemplates = new Map();
+      
+      recurringTransactions.forEach(template => {
+        console.log('[Recurring Debug] Checking transaction:', template.description, template);
+        let next = template.nextOccurrence;
+        let nextOccurrence = next;
+        
+        // Process all occurrences up to today
+        while (next && next <= today) {
+          // Check if this occurrence already exists using the map lookup
+          const key = `${next}|${template.description}|${template.amount}|${template.type}|${template.category}`;
+          
+          if (!existingTransactionMap.has(key)) {
+            console.log('[Recurring Debug] Generating new transaction for', template.description, 'on', next);
+            const newTransaction = {
+              ...template,
+              id: crypto.randomUUID(),
+              date: next,
+              isRecurring: true,
+              recurrence: undefined,
+              recurrenceEndDate: undefined,
+              nextOccurrence: undefined,
+            };
+            
+            newTransactions.push(newTransaction);
+            // Add to map to prevent duplicates if multiple occurrences on same day
+            existingTransactionMap.set(key, true);
+          }
+          
+          // Calculate next occurrence date
+          let nextDate = parseISO(next);
+          switch (template.recurrence) {
+            case 'daily': nextDate = addDays(nextDate, 1); break;
+            case 'weekly': nextDate = addWeeks(nextDate, 1); break;
+            case 'monthly': nextDate = addMonths(nextDate, 1); break;
+            case 'yearly': nextDate = addYears(nextDate, 1); break;
+            default: break;
+          }
+          
+          next = nextDate ? format(nextDate, 'yyyy-MM-dd') : '';
+          nextOccurrence = next;
+        }
+        
+        // Only update templates that changed
+        if (template.nextOccurrence !== nextOccurrence) {
+          updatedTemplates.set(template.id, { ...template, nextOccurrence });
+        }
+      });
+      
+      // Update state only if changes were made
+      if (newTransactions.length > 0 || updatedTemplates.size > 0) {
+        console.log('[Recurring Debug] Generated', newTransactions.length, 'new transactions');
+        
+        // Create updated transaction list
+        const updatedTransactions = transactions.map(t => {
+          // Replace recurring templates with updated versions
+          return updatedTemplates.has(t.id) ? updatedTemplates.get(t.id) : t;
+        });
+        
+        // Add new transactions
+        setTransactions([...newTransactions, ...updatedTransactions]);
+        console.log('[Recurring Debug] setTransactions with new transactions');
       } else {
         console.log('[Recurring Debug] No new recurring transactions generated.');
       }
