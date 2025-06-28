@@ -104,7 +104,7 @@ export const useTransactions = () => {
               console.log('[Recurring Debug] Generating new transaction for', t.description, 'on', next);
               const newTx = {
                 ...t,
-                id: Date.now() + Math.floor(Math.random() * 10000),
+                id: crypto.randomUUID(),
                 date: next,
                 isRecurring: true,
                 recurrence: undefined,
