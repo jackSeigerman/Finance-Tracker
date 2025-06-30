@@ -1,5 +1,5 @@
 import version from '../version.json';
-const url = 'https://raw.githubusercontent.com/jackSeigerman/Finance-Manager/refs/heads/Master/version.json';
+const url = 'https://raw.githubusercontent.com/jackSeigerman/Finance-Tracker/refs/heads/master/version.json';
 
 function fetchWithTimeout(resource: RequestInfo, options: RequestInit = {}, timeout = 5000): Promise<Response> {
   return new Promise((resolve, reject) => {
