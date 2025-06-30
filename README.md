@@ -19,6 +19,6 @@
      
 ## locations
 
-the main page is at `/app/index.tsx` and the components are in `/components` dont touch the ios app folder
+the main page is at `/app/index.tsx` and the components are in `/components` dont touch the ios folder
 
 
