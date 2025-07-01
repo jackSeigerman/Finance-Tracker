@@ -50,7 +50,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [followSystem, setFollowSystem] = useState(false);
+  const [followSystem, setFollowSystem] = useState(true);
 
   // Determine theme based on followSystem and system color scheme
   const systemColorScheme = Appearance.getColorScheme();
@@ -64,7 +64,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         const savedTheme = await storageManager.loadTheme();
         const savedFollowSystem = await storageManager.loadFollowSystem?.();
         setIsDarkMode(savedTheme);
-        setFollowSystem(savedFollowSystem ?? false);
+        setFollowSystem(savedFollowSystem ?? true);
       } catch (error) {
         console.error('Error loading theme:', error);
       } finally {
