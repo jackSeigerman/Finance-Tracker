@@ -9,6 +9,7 @@ const STORAGE_KEYS = {
   TRANSACTIONS: 'finance_manager_transactions',
   BUDGET: 'finance_manager_budget',
   THEME: 'finance_manager_theme',
+  FOLLOW_SYSTEM: 'finance_manager_follow_system',
 };
 
 // Cross-platform storage utility
@@ -95,12 +96,30 @@ class StorageManager {
     return false;
   }
 
+  // Follow system theme methods
+  async saveFollowSystem(follow: boolean): Promise<void> {
+    await this.setItem(STORAGE_KEYS.FOLLOW_SYSTEM, JSON.stringify(follow));
+  }
+
+  async loadFollowSystem(): Promise<boolean> {
+    const data = await this.getItem(STORAGE_KEYS.FOLLOW_SYSTEM);
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        console.error('Error parsing follow system:', error);
+      }
+    }
+    return false;
+  }
+
   // Clear all data
   async clearAll(): Promise<void> {
     await Promise.all([
       this.removeItem(STORAGE_KEYS.TRANSACTIONS),
       this.removeItem(STORAGE_KEYS.BUDGET),
       this.removeItem(STORAGE_KEYS.THEME),
+      this.removeItem(STORAGE_KEYS.FOLLOW_SYSTEM),
     ]);
   }
 }
