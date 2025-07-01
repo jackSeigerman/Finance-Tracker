@@ -7,7 +7,6 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-import { checkTagStatus } from "../utils/versionChecker";
 import React, { useEffect, useState } from "react";
 import {
   View,
