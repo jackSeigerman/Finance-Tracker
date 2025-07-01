@@ -57,7 +57,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
               <View>
                 <Text style={[styles.label, { color: theme.text }]}>Follow Device Theme</Text>
                 <Text style={[styles.description, { color: theme.textSecondary }]}>
-                  Automatically match your device's light/dark mode
+                  Automatically match your device's theme
                 </Text>
               </View>
               <Switch
