@@ -19,10 +19,10 @@ export default function RootLayout() {
       const status = await checkTagStatus();
       if (status === 1) {
         if (Platform.OS === 'web') {
-          setErrorMessage('A new version of Finance Manager is available.');
+          setErrorMessage('A new version of The Finance Tracker is available.');
         }
         else {
-          Alert.alert('A new version of Finance Manager is available. Please update the app.');
+          Alert.alert('A new version of The Finance Tracker is available. Please update the app.');
         }
         console.log(status);
       } else if (status === 2) {
