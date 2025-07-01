@@ -10,7 +10,7 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClearData }) => {
-  const { theme, isDarkMode, toggleTheme } = useTheme();
+  const { theme, isDarkMode, toggleTheme, followSystem, toggleFollowSystem } = useTheme();
 
   const handleClearData = () => {
     if (Platform.OS === 'web') {
@@ -55,6 +55,22 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
           <View style={styles.content}>
             <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
               <View>
+                <Text style={[styles.label, { color: theme.text }]}>Follow Device Theme</Text>
+                <Text style={[styles.description, { color: theme.textSecondary }]}>
+                  Automatically match your device's light/dark mode
+                </Text>
+              </View>
+              <Switch
+                value={followSystem}
+                onValueChange={toggleFollowSystem}
+                trackColor={{ false: theme.border, true: theme.primary }}
+                thumbColor={followSystem ? '#ffffff' : '#f4f3f4'}
+                ios_backgroundColor={theme.border}
+              />
+            </View>
+
+            <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
+              <View>
                 <Text style={[styles.label, { color: theme.text }]}>Dark Mode</Text>
                 <Text style={[styles.description, { color: theme.textSecondary }]}>
                   Switch between light and dark themes
@@ -66,6 +82,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
                 trackColor={{ false: theme.border, true: theme.primary }}
                 thumbColor={isDarkMode ? '#ffffff' : '#f4f3f4'}
                 ios_backgroundColor={theme.border}
+                disabled={followSystem}
               />
             </View>
 
