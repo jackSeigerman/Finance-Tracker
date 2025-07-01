@@ -198,6 +198,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 0, // add if you want edge spacing, e.g. 4 or 8
   },
   categoryButton: {
     flexDirection: 'row',
@@ -206,6 +208,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     minWidth: '48%',
+    flexBasis: '48%',
+    flexGrow: 1,
+    marginBottom: 8, // add vertical spacing between rows
   },
   saveButton: {
     padding: 16,
