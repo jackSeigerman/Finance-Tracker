@@ -5,18 +5,16 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
-    "@react-native-async-storage/async-storage": "2.1.2",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
-    "date-fns": "^4.1.0",
     "expo": "~53.0.11",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",
@@ -26,7 +24,6 @@
     "expo-linking": "~7.1.5",
     "expo-router": "~5.1.0",
     "expo-splash-screen": "~0.30.9",
-    "expo-sqlite": "~15.2.12",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.8",
@@ -38,21 +35,18 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-
-
-    "react-native-web": "^0.20.0",
+    "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "expo-sqlite": "~15.2.12",
     "@react-native-async-storage/async-storage": "2.1.2",
-    "@expo/metro-runtime": "~5.0.4"
+    "expo-updates": "~0.28.15"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@react-native-community/cli": "latest",
     "@types/react": "~19.0.10",
+    "typescript": "~5.8.3",
     "eslint": "^9.25.0",
-    "eslint-config-expo": "~9.2.0",
-    "typescript": "~5.8.3"
+    "eslint-config-expo": "~9.2.0"
   },
   "private": true
 }

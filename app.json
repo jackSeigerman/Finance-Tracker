@@ -20,8 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
-      "package": "com.jackseigerman.FinanceManager"
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "bundler": "metro",

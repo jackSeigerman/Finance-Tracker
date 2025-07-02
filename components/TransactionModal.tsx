@@ -11,7 +11,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 import { Transaction } from '@/utils/Transaction';
-import { Switch } from 'react-native';
 
 interface TransactionModalProps {
   visible: boolean;
@@ -30,13 +29,6 @@ const categories = [
   { key: 'health', label: 'Healthcare', icon: 'medical' },
   { key: 'income', label: 'Income', icon: 'cash' },
   { key: 'other', label: 'Other', icon: 'ellipsis-horizontal' },
-];
-
-const recurrenceOptions = [
-  { key: 'daily', label: 'Daily' },
-  { key: 'weekly', label: 'Weekly' },
-  { key: 'monthly', label: 'Monthly' },
-  { key: 'yearly', label: 'Yearly' },
 ];
 
 const TransactionModal: React.FC<TransactionModalProps> = ({
@@ -74,18 +66,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              value={
-                isNaN(currentTransaction.amount) || currentTransaction.amount === null || currentTransaction.amount === undefined
-                  ? ''
-                  : currentTransaction.amount.toString()
-              }
-              onChangeText={text => {
-                const parsed = parseFloat(text);
-                setCurrentTransaction({
-                  ...currentTransaction,
-                  amount: text === '' ? 0 : parsed,
-                });
-              }}
+              value={currentTransaction.amount.toString()}
+              onChangeText={text => setCurrentTransaction({ ...currentTransaction, amount: parseFloat(text) })}
               placeholder="0.00"
               placeholderTextColor={theme.textTertiary}
               keyboardType="numeric"
@@ -151,66 +133,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               placeholder="YYYY-MM-DD"
               placeholderTextColor={theme.textTertiary}
             />
-            <Text style={[styles.label, { color: theme.text }]}>Recurring</Text>
-<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-  <Switch
-    value={!!currentTransaction.isRecurring}
-    onValueChange={value =>
-      setCurrentTransaction({
-        ...currentTransaction,
-        isRecurring: value,
-        recurrence: value ? 'monthly' : undefined,
-        nextOccurrence: value ? currentTransaction.date : undefined,
-      })
-    }
-    trackColor={{ false: theme.border, true: theme.primary }}
-    thumbColor={currentTransaction.isRecurring ? theme.primary : theme.border}
-  />
-  <Text style={{ marginLeft: 12, color: theme.textSecondary }}>
-    {currentTransaction.isRecurring ? 'Yes' : 'No'}
-  </Text>
-</View>
-
-{currentTransaction.isRecurring && (
-  <>
-    <Text style={[styles.label, { color: theme.text }]}>Recurrence Frequency</Text>
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-      {recurrenceOptions.map(opt => (
-        <TouchableOpacity
-          key={opt.key}
-          style={[
-            styles.typeButton,
-            currentTransaction.recurrence === opt.key && { backgroundColor: theme.primary, borderColor: theme.primary },
-          ]}
-          onPress={() =>
-            setCurrentTransaction({
-              ...currentTransaction,
-              recurrence: opt.key as any,
-            })
-          }
-        >
-          <Text
-            style={{
-              color: currentTransaction.recurrence === opt.key ? 'white' : theme.textSecondary,
-              fontWeight: currentTransaction.recurrence === opt.key ? '600' : '400',
-            }}
-          >
-            {opt.label}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-
-    <Text style={[styles.label, { color: theme.text }]}>End Date (optional)</Text>
-    <TextInput
-      style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-      value={currentTransaction.recurrenceEndDate || ''}
-      onChangeText={text => setCurrentTransaction({ ...currentTransaction, recurrenceEndDate: text })}
-      placeholder="YYYY-MM-DD"
-      placeholderTextColor={theme.textTertiary}
-    />
-  </>
-)}
           </ScrollView>
 
           <TouchableOpacity style={[styles.saveButton, { backgroundColor: theme.primary }]} onPress={onSave}>
