@@ -22,3 +22,12 @@
 the main page is at `/app/index.tsx` and the components are in `/components` dont touch the ios folder
 
 
+## Dont do this, this is for me
+
+   ```bash
+   Eas build
+   ```
+   
+   ```bash
+   Eas submit
+   ```
