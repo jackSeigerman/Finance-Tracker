@@ -24,30 +24,6 @@ export default function RootLayout() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function checkForUpdates() {
-      const status = await checkTagStatus();
-      if (status === 1) {
-        if (Platform.OS === 'web') {
-          setErrorMessage('A new version of Finance Manager is available.');
-        }
-        else {
-          Alert.alert('A new version of Finance Manager is available. Please update the app.');
-        }
-        console.log(status);
-      } else if (status === 2) {
-        if (Platform.OS === 'web') {
-          setErrorMessage('Error checking for updates. Check your internet connection.');
-        } else {
-          Alert.alert('Error checking for updates. Check your internet connection and try again later.');
-        }
-        console.log(status);
-      }
-    }
-
-    checkForUpdates();
-  }, []);
-
   if (!loaded) {
     return null;
   }
