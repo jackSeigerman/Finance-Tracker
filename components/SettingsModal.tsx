@@ -90,41 +90,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
 
 
 
-            <View style={[styles.settingItem, { borderBottomColor: theme.border }]}>
-              <View>
-                <Text style={[styles.label, { color: theme.text }]}>Github</Text>
-                <Text style={[styles.description, { color: theme.textSecondary }]}>
-                  See more on my Github
-                </Text>
-              </View>
-              
-              <TouchableOpacity
-                onPress={async () => {
-                  const webUrl = "https://www.github.com/jackSeigerman";
-                  const appUrl = "github://user?username=jackSeigerman";
-
-                  if (Platform.OS === 'web') {
-                    window.open(webUrl, '_blank');
-                  } else {
-                    try {
-                      const supported = await Linking.canOpenURL(appUrl);
-                      if (supported) {
-                        await Linking.openURL(appUrl);
-                      } else {
-                        await Linking.openURL(webUrl);
-                      }
-                    } catch (error) {
-                      console.error('Error opening link:', error);
-                    }
-                  }
-                }}
-                style={[styles.actionButton, { backgroundColor: theme.primary }]}
-              >
-                <Text style={styles.actionButtonText}>Github</Text>
-              </TouchableOpacity>
-            </View>
-
-
             
           </View>
         </View>

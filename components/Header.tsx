@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, onOpenBudget }) => {
 
   return (
     <View style={[styles.header, { backgroundColor: theme.primary }]}>      
-      <Text style={styles.headerTitle}>Finance Manager</Text>
+      <Text style={styles.headerTitle}>The Finance Tracker</Text>
       <View style={styles.headerButtons}>
         <TouchableOpacity style={styles.headerButton} onPress={onOpenSettings}>
           <Ionicons name="settings" size={24} color="white" />
