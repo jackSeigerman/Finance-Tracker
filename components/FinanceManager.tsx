@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { ScrollView, View, ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import Header from "./Header";
 import Overview from './Overview';
 import TransactionsList from './TransactionsList';
@@ -21,10 +21,12 @@ const FinanceManager = () => {
     settingsModalVisible,
     setSettingsModalVisible,
     isLoading: dataLoading,
+    // setDebugDate,
+    // debugDate,
+    // currentDate,
     ...transactionHandlers
   } = useTransactions();
 
-  // Show loading indicator while data is being loaded
   if (themeLoading || dataLoading) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
