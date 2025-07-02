@@ -1,3 +1,8 @@
+## Branch Guide
+
+`Production` - current Ios review build, gets all fixes
+
+`main` - current feature branch, gets all features (will be merged with Production upon Production being accepted onto app store)
 
 
 ## Get started
