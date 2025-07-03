@@ -57,7 +57,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
               <View>
                 <Text style={[styles.label, { color: theme.text }]}>Follow Device Theme</Text>
                 <Text style={[styles.description, { color: theme.textSecondary }]}>
-                  Automatically match your device's theme
+                  Match your device's theme
                 </Text>
               </View>
               <Switch
@@ -73,7 +73,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
               <View>
                 <Text style={[styles.label, { color: theme.text }]}>Dark Mode</Text>
                 <Text style={[styles.description, { color: theme.textSecondary }]}>
-                  Switch between light and dark themes
+                  Toggle light and dark theme
                 </Text>
               </View>
               <Switch
@@ -93,7 +93,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
                 <View>
                   <Text style={[styles.label, { color: theme.text }]}>Clear All Data</Text>
                   <Text style={[styles.description, { color: theme.textSecondary }]}>
-                    Clear all Cookies
+                    Full Reset
                   </Text>
                 </View>
                 <TouchableOpacity
