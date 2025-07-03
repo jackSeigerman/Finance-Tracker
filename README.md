@@ -1,10 +1,3 @@
-## Branch Guide
-
-`Production` - current Ios review build, gets all fixes
-
-`Feature` - current feature branch, gets all features (will be merged with Production upon Production being accepted onto app store)
-
-
 ## Get started
 
 1. Install dependencies
