@@ -110,7 +110,7 @@ class StorageManager {
         console.error('Error parsing follow system:', error);
       }
     }
-    return false;
+    return true; // Default to true
   }
 
   // Clear all data
