@@ -67,10 +67,15 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
               value={currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()}
-              onChangeText={text => setCurrentTransaction({ ...currentTransaction, amount: text === '' ? 0 : parseFloat(text) || 0 })}
+              onChangeText={text => {
+                // Allow empty string, numbers, and decimal points
+                if (text === '' || /^\d*\.?\d*$/.test(text)) {
+                  setCurrentTransaction({ ...currentTransaction, amount: text === '' ? 0 : parseFloat(text) || 0 });
+                }
+              }}
               placeholder="0.00"
               placeholderTextColor={theme.textTertiary}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
             />
 
             <Text style={[styles.label, { color: theme.text }]}>Type</Text>

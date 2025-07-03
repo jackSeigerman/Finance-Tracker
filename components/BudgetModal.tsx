@@ -53,10 +53,15 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ visible, onClose, setBudget, 
                 borderColor: theme.border,
               }]}
               value={budgetInput}
-              onChangeText={setBudgetInput}
+              onChangeText={(text) => {
+                // Allow empty string, numbers, and decimal points
+                if (text === '' || /^\d*\.?\d*$/.test(text)) {
+                  setBudgetInput(text);
+                }
+              }}
               placeholder="Enter budget amount"
               placeholderTextColor={theme.textTertiary}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
             />
             {currentBudget > 0 && (
               <Text style={[styles.currentBudget, { color: theme.textSecondary }]}>                
