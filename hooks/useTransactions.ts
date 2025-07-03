@@ -76,7 +76,7 @@ export const useTransactions = () => {
     }
 
     const amount = currentTransaction.amount;
-    if (isNaN(amount) || amount <= 0) {
+    if (isNaN(amount) || amount <= 0 || amount === null || amount === undefined) {
       alert('Please enter a valid amount');
       return;
     }
