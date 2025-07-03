@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "FinanceManager",
-    "slug": "FinanceManager",
+    "name": "TheFinanceTracker",
+    "slug": "TheFinanceTracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "financemanager",
+    "scheme": "thefinancetracker",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
