@@ -22,10 +22,23 @@ the main page is at `/app/index.tsx` and the components are in `/components` don
 
 ## Dont do this, this is for me
 
-   ```bash
-   Eas build
-   ```
-   
-   ```bash
-   Eas submit
-   ```
+
+### IOS
+
+```bash
+Eas build
+```
+      
+```bash
+Eas submit
+```
+
+### Web
+
+```bash
+npx expo export --platform web
+```
+
+```bash
+Eas deploy
+```
