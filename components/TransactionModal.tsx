@@ -27,7 +27,7 @@ const categories = [
   { key: 'entertainment', label: 'Entertainment', icon: 'game-controller' },
   { key: 'bills', label: 'Bills & Utilities', icon: 'receipt' },
   { key: 'health', label: 'Healthcare', icon: 'medical' },
-  { key: 'income', label: 'Income', icon: 'cash' },
+  // Removed 'income' from categories
   { key: 'other', label: 'Other', icon: 'ellipsis-horizontal' },
 ];
 
@@ -39,6 +39,18 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   onSave,
 }) => {
   const { theme } = useTheme();
+
+  // If type is 'income', always set category to 'income'
+  React.useEffect(() => {
+    if (currentTransaction.type === 'income' && currentTransaction.category !== 'income') {
+      setCurrentTransaction({ ...currentTransaction, category: 'income' });
+    }
+    // If type is 'expense' and category was 'income', reset to 'other'
+    if (currentTransaction.type === 'expense' && currentTransaction.category === 'income') {
+      setCurrentTransaction({ ...currentTransaction, category: 'other' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTransaction.type]);
 
   return (
    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
@@ -101,34 +113,39 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               ))}
             </View>
 
-            <Text style={[styles.label, { color: theme.text }]}>Category</Text>
-            <View style={styles.categoryContainer}>
-              {categories.map(cat => (
-                <TouchableOpacity
-                  key={cat.key}
-                  style={[
-                    styles.categoryButton,
-                    currentTransaction.category === cat.key && { backgroundColor: theme.primary, borderColor: theme.primary },
-                  ]}
-                  onPress={() => setCurrentTransaction({ ...currentTransaction, category: cat.key })}
-                >
-                  <Ionicons
-                    name={cat.icon as any}
-                    size={20}
-                    color={currentTransaction.category === cat.key ? 'white' : theme.textSecondary}
-                  />
-                  <Text
-                    style={{
-                      color: currentTransaction.category === cat.key ? 'white' : theme.textSecondary,
-                      fontWeight: currentTransaction.category === cat.key ? '600' : '400',
-                      marginLeft: 8,
-                    }}
-                  >
-                    {cat.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {/* Only show Category if type is 'expense' */}
+            {currentTransaction.type === 'expense' && (
+              <>
+                <Text style={[styles.label, { color: theme.text }]}>Category</Text>
+                <View style={styles.categoryContainer}>
+                  {categories.map(cat => (
+                    <TouchableOpacity
+                      key={cat.key}
+                      style={[
+                        styles.categoryButton,
+                        currentTransaction.category === cat.key && { backgroundColor: theme.primary, borderColor: theme.primary },
+                      ]}
+                      onPress={() => setCurrentTransaction({ ...currentTransaction, category: cat.key })}
+                    >
+                      <Ionicons
+                        name={cat.icon as any}
+                        size={20}
+                        color={currentTransaction.category === cat.key ? 'white' : theme.textSecondary}
+                      />
+                      <Text
+                        style={{
+                          color: currentTransaction.category === cat.key ? 'white' : theme.textSecondary,
+                          fontWeight: currentTransaction.category === cat.key ? '600' : '400',
+                          marginLeft: 8,
+                        }}
+                      >
+                        {cat.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </>
+            )}
 
             <Text style={[styles.label, { color: theme.text }]}>Date</Text>
             <TextInput
