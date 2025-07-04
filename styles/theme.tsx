@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Appearance } from 'react-native';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
+import { Appearance, ActivityIndicator, View, StyleSheet, Animated, Platform } from 'react-native';
 import { storageManager } from '../utils/storage';
 
 // Define theme colors
@@ -51,6 +51,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [followSystem, setFollowSystem] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Determine theme based on followSystem and system color scheme
   const systemColorScheme = Appearance.getColorScheme();
@@ -107,6 +108,16 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
+  useEffect(() => {
+    if (!isLoading) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isLoading, fadeAnim]);
+
   return (
     <ThemeContext.Provider value={{
       colors,
@@ -117,11 +128,48 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       followSystem,
       toggleFollowSystem,
     }}>
-      {/* Prevent white flash on web by not rendering children until theme is loaded */}
-      {isLoading ? null : children}
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color={effectiveDarkMode ? '#fff' : '#888'}
+          />
+        </View>
+      ) : (
+        <Animated.View
+          style={[
+            styles.animatedContainer,
+            { opacity: fadeAnim, backgroundColor: theme.background }
+          ]}
+        >
+          {children}
+        </Animated.View>
+      )}
     </ThemeContext.Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100%',
+    minWidth: '100%',
+    position: Platform.OS === 'web' ? 'fixed' : 'relative',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
+  },
+  animatedContainer: {
+    flex: 1,
+    minHeight: '100%',
+    minWidth: '100%',
+  },
+});
 
 // useTheme hook
 export const useTheme = () => {
