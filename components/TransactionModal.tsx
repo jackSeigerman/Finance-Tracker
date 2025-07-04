@@ -40,6 +40,16 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 }) => {
   const { theme } = useTheme();
 
+  // Local state for amount input as string
+  const [amountInput, setAmountInput] = React.useState(
+    currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()
+  );
+
+  // Sync local amountInput when modal opens or currentTransaction.amount changes externally
+  React.useEffect(() => {
+    setAmountInput(currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString());
+  }, [visible, currentTransaction.amount]);
+
   // If type is 'income', always set category to 'income'
   React.useEffect(() => {
     if (currentTransaction.type === 'income' && currentTransaction.category !== 'income') {
@@ -78,16 +88,21 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              value={currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()}
+              value={amountInput}
               onChangeText={text => {
                 // Allow empty string, numbers, and decimal points
-                if (text === '' || /^\d*\.?\d*$/.test(text)) {
-                  setCurrentTransaction({ ...currentTransaction, amount: text === '' ? 0 : parseFloat(text) || 0 });
+                if (/^\d*\.?\d*$/.test(text)) {
+                  setAmountInput(text);
+                  setCurrentTransaction({
+                    ...currentTransaction,
+                    amount: text === '' ? 0 : parseFloat(text),
+                  });
                 }
               }}
               placeholder="0.00"
               placeholderTextColor={theme.textTertiary}
-              keyboardType="decimal-pad"
+              keyboardType="numeric"
+              inputMode="decimal"
             />
 
             <Text style={[styles.label, { color: theme.text }]}>Type</Text>
