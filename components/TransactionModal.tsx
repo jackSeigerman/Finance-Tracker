@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
-import { Transaction } from '@/utils/Transaction';
+import { Transaction, formatCents } from '@/utils/Transaction';
 
 interface TransactionModalProps {
   visible: boolean;
@@ -40,15 +40,21 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 }) => {
   const { theme } = useTheme();
 
-  // Local state for amount input as string
+  // Local state for amount input as string, display from cents
   const [amountInput, setAmountInput] = React.useState(
-    currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()
+    currentTransaction.amountCents === 0 || currentTransaction.amountCents === undefined
+      ? ''
+      : formatCents(currentTransaction.amountCents)
   );
 
-  // Sync local amountInput when modal opens or currentTransaction.amount changes externally
+  // Sync local amountInput when modal opens or currentTransaction.amountCents changes externally
   React.useEffect(() => {
-    setAmountInput(currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString());
-  }, [visible, currentTransaction.amount]);
+    setAmountInput(
+      currentTransaction.amountCents === 0 || currentTransaction.amountCents === undefined
+        ? ''
+        : formatCents(currentTransaction.amountCents)
+    );
+  }, [visible, currentTransaction.amountCents]);
 
   // If type is 'income', always set category to 'income'
   React.useEffect(() => {
@@ -91,11 +97,13 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               value={amountInput}
               onChangeText={text => {
                 // Allow empty string, numbers, and decimal points
-                if (/^\d*\.?\d*$/.test(text)) {
+                if (/^\d*\.?\d{0,2}$/.test(text)) {
                   setAmountInput(text);
                   setCurrentTransaction({
                     ...currentTransaction,
-                    amount: text === '' ? 0 : parseFloat(text),
+                    amountCents: text === ''
+                      ? 0
+                      : Math.round(parseFloat(text.replace(',', '.')) * 100),
                   });
                 }
               }}
