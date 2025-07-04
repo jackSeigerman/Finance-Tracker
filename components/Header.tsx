@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 
@@ -13,7 +13,11 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, onOpenBudget }) => {
 
   return (
     <View style={[styles.header, { backgroundColor: theme.primary }]}>      
-      <Text style={styles.headerTitle}>The Finance Tracker</Text>
+      <Image
+        source={require('../assets/images/LogoTransperant.png')}
+        style={{ width: 35, height: 35 }}
+        resizeMode="contain"
+      />
       <View style={styles.headerButtons}>
         <TouchableOpacity style={styles.headerButton} onPress={onOpenSettings}>
           <Ionicons name="settings" size={24} color="white" />
@@ -29,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, onOpenBudget }) => {
 const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
