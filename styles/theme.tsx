@@ -117,7 +117,8 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       followSystem,
       toggleFollowSystem,
     }}>
-      {children}
+      {/* Prevent white flash on web by not rendering children until theme is loaded */}
+      {isLoading ? null : children}
     </ThemeContext.Provider>
   );
 };
