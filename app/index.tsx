@@ -7,11 +7,12 @@ const AppWrapper = () => {
   const { theme } = useTheme();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>      
-      <StatusBar
-        barStyle={theme.text === '#ffffff' ? 'light-content' : 'dark-content'}
-        backgroundColor={theme.primary}
-      />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.primary }]}>      
+    <StatusBar
+      barStyle="light-content"  // Force light content since your header is dark
+      backgroundColor={theme.primary}
+      translucent={false}  // Add this for better iOS behavior
+    />
       <FinanceManager />
     </SafeAreaView>
   );
