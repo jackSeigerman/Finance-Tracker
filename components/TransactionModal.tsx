@@ -41,7 +41,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const { theme } = useTheme();
 
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+   <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <View style={[styles.overlay, { backgroundColor: theme.overlay }]}>        
         <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>          
           <View style={[styles.header, { borderBottomColor: theme.border }]}>            
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   typeButton: {
     flex: 1,
-    padding: 12,
+    padding: 16,
     borderRadius: 8,
     borderWidth: 1,
     alignItems: 'center',
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   categoryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
+    padding: 16,
     borderRadius: 8,
     borderWidth: 1,
     minWidth: '48%',

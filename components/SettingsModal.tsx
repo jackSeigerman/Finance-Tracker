@@ -40,7 +40,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <View style={[styles.overlay, { backgroundColor: theme.overlay }]}>
         <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>
           <View style={[styles.header, { borderBottomColor: theme.border }]}>
