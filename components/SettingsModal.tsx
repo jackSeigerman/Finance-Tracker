@@ -105,7 +105,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, onClear
               </View>
             )}
 
-
+            <View style={[styles.creditsSection, { borderTopColor: theme.border }]}>
+              <Text style={[styles.creditsText, { color: theme.textSecondary }]}>
+                Developed by: Jack Seigerman, Alexander Fiodorov-Miller, Kartikeya Bomb and Michael Boyer
+              </Text>
+            </View>
 
             
           </View>
@@ -170,6 +174,17 @@ const styles = StyleSheet.create({
   actionButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  creditsSection: {
+    marginTop: 20,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    alignItems: 'center',
+  },
+  creditsText: {
+    fontSize: 11,
+    opacity: 0.6,
+    textAlign: 'center',
   },
 });
 
