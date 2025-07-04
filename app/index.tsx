@@ -29,9 +29,11 @@ const App = () => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
   },
   content: {
     flex: 1,
+    marginBottom: -100, // Adjusted to avoid overlap with the bottom tab bar
   },
 });
 
