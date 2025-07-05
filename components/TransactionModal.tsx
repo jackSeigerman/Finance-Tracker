@@ -27,7 +27,7 @@ const categories = [
   { key: 'entertainment', label: 'Entertainment', icon: 'game-controller' },
   { key: 'bills', label: 'Bills & Utilities', icon: 'receipt' },
   { key: 'health', label: 'Healthcare', icon: 'medical' },
-  { key: 'income', label: 'Income', icon: 'cash' },
+  // Removed 'income' from categories
   { key: 'other', label: 'Other', icon: 'ellipsis-horizontal' },
 ];
 
@@ -39,6 +39,28 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   onSave,
 }) => {
   const { theme } = useTheme();
+
+  // Local state for amount input as string
+  const [amountInput, setAmountInput] = React.useState(
+    currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()
+  );
+
+  // Sync local amountInput when modal opens or currentTransaction.amount changes externally
+  React.useEffect(() => {
+    setAmountInput(currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString());
+  }, [visible, currentTransaction.amount]);
+
+  // If type is 'income', always set category to 'income'
+  React.useEffect(() => {
+    if (currentTransaction.type === 'income' && currentTransaction.category !== 'income') {
+      setCurrentTransaction({ ...currentTransaction, category: 'income' });
+    }
+    // If type is 'expense' and category was 'income', reset to 'other'
+    if (currentTransaction.type === 'expense' && currentTransaction.category === 'income') {
+      setCurrentTransaction({ ...currentTransaction, category: 'other' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTransaction.type]);
 
   return (
    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
@@ -66,16 +88,21 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
-              value={currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()}
+              value={amountInput}
               onChangeText={text => {
                 // Allow empty string, numbers, and decimal points
-                if (text === '' || /^\d*\.?\d*$/.test(text)) {
-                  setCurrentTransaction({ ...currentTransaction, amount: text === '' ? 0 : parseFloat(text) || 0 });
+                if (/^\d*\.?\d*$/.test(text)) {
+                  setAmountInput(text);
+                  setCurrentTransaction({
+                    ...currentTransaction,
+                    amount: text === '' ? 0 : parseFloat(text),
+                  });
                 }
               }}
               placeholder="0.00"
               placeholderTextColor={theme.textTertiary}
-              keyboardType="decimal-pad"
+              keyboardType="numeric"
+              inputMode="decimal"
             />
 
             <Text style={[styles.label, { color: theme.text }]}>Type</Text>
@@ -101,34 +128,39 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               ))}
             </View>
 
-            <Text style={[styles.label, { color: theme.text }]}>Category</Text>
-            <View style={styles.categoryContainer}>
-              {categories.map(cat => (
-                <TouchableOpacity
-                  key={cat.key}
-                  style={[
-                    styles.categoryButton,
-                    currentTransaction.category === cat.key && { backgroundColor: theme.primary, borderColor: theme.primary },
-                  ]}
-                  onPress={() => setCurrentTransaction({ ...currentTransaction, category: cat.key })}
-                >
-                  <Ionicons
-                    name={cat.icon as any}
-                    size={20}
-                    color={currentTransaction.category === cat.key ? 'white' : theme.textSecondary}
-                  />
-                  <Text
-                    style={{
-                      color: currentTransaction.category === cat.key ? 'white' : theme.textSecondary,
-                      fontWeight: currentTransaction.category === cat.key ? '600' : '400',
-                      marginLeft: 8,
-                    }}
-                  >
-                    {cat.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {/* Only show Category if type is 'expense' */}
+            {currentTransaction.type === 'expense' && (
+              <>
+                <Text style={[styles.label, { color: theme.text }]}>Category</Text>
+                <View style={styles.categoryContainer}>
+                  {categories.map(cat => (
+                    <TouchableOpacity
+                      key={cat.key}
+                      style={[
+                        styles.categoryButton,
+                        currentTransaction.category === cat.key && { backgroundColor: theme.primary, borderColor: theme.primary },
+                      ]}
+                      onPress={() => setCurrentTransaction({ ...currentTransaction, category: cat.key })}
+                    >
+                      <Ionicons
+                        name={cat.icon as any}
+                        size={20}
+                        color={currentTransaction.category === cat.key ? 'white' : theme.textSecondary}
+                      />
+                      <Text
+                        style={{
+                          color: currentTransaction.category === cat.key ? 'white' : theme.textSecondary,
+                          fontWeight: currentTransaction.category === cat.key ? '600' : '400',
+                          marginLeft: 8,
+                        }}
+                      >
+                        {cat.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </>
+            )}
 
             <Text style={[styles.label, { color: theme.text }]}>Date</Text>
             <TextInput
