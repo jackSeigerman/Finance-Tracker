@@ -41,20 +41,16 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const { theme } = useTheme();
 
   // Local state for amount input as string, display from cents
-  const [amountInput, setAmountInput] = React.useState(
-    currentTransaction.amountCents === 0 || currentTransaction.amountCents === undefined
-      ? ''
-      : formatCents(currentTransaction.amountCents)
-  );
+  const [amountInput, setAmountInput] = React.useState('');
 
-  // Sync local amountInput when modal opens or currentTransaction.amountCents changes externally
+  // When modal opens or transaction changes externally, set amountInput from cents
   React.useEffect(() => {
     setAmountInput(
       currentTransaction.amountCents === 0 || currentTransaction.amountCents === undefined
         ? ''
-        : formatCents(currentTransaction.amountCents)
+        : (currentTransaction.amountCents / 100).toString()
     );
-  }, [visible, currentTransaction.amountCents]);
+  }, [visible, currentTransaction.id]);
 
   // If type is 'income', always set category to 'income'
   React.useEffect(() => {
@@ -99,12 +95,21 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 // Allow empty string, numbers, and decimal points
                 if (/^\d*\.?\d{0,2}$/.test(text)) {
                   setAmountInput(text);
-                  setCurrentTransaction({
-                    ...currentTransaction,
-                    amountCents: text === ''
-                      ? 0
-                      : Math.round(parseFloat(text.replace(',', '.')) * 100),
-                  });
+                  // Only update amountCents if valid number
+                  if (text === '' || text === '.') {
+                    setCurrentTransaction({
+                      ...currentTransaction,
+                      amountCents: 0,
+                    });
+                  } else {
+                    const floatVal = parseFloat(text.replace(',', '.'));
+                    if (!isNaN(floatVal)) {
+                      setCurrentTransaction({
+                        ...currentTransaction,
+                        amountCents: Math.round(floatVal * 100),
+                      });
+                    }
+                  }
                 }
               }}
               placeholder="0.00"
