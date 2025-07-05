@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
-import { Transaction, formatCents } from '@/utils/Transaction';
+import { Transaction } from '@/utils/Transaction';
 
 interface TransactionModalProps {
   visible: boolean;
@@ -40,17 +40,15 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 }) => {
   const { theme } = useTheme();
 
-  // Local state for amount input as string, display from cents
-  const [amountInput, setAmountInput] = React.useState('');
+  // Local state for amount input as string
+  const [amountInput, setAmountInput] = React.useState(
+    currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString()
+  );
 
-  // When modal opens or transaction changes externally, set amountInput from cents
+  // Sync local amountInput when modal opens or currentTransaction.amount changes externally
   React.useEffect(() => {
-    setAmountInput(
-      currentTransaction.amountCents === 0 || currentTransaction.amountCents === undefined
-        ? ''
-        : (currentTransaction.amountCents / 100).toString()
-    );
-  }, [visible, currentTransaction.id]);
+    setAmountInput(currentTransaction.amount === 0 ? '' : currentTransaction.amount.toString());
+  }, [visible, currentTransaction.amount]);
 
   // If type is 'income', always set category to 'income'
   React.useEffect(() => {
@@ -93,23 +91,12 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               value={amountInput}
               onChangeText={text => {
                 // Allow empty string, numbers, and decimal points
-                if (/^\d*\.?\d{0,2}$/.test(text)) {
+                if (/^\d*\.?\d*$/.test(text)) {
                   setAmountInput(text);
-                  // Only update amountCents if valid number
-                  if (text === '' || text === '.') {
-                    setCurrentTransaction({
-                      ...currentTransaction,
-                      amountCents: 0,
-                    });
-                  } else {
-                    const floatVal = parseFloat(text.replace(',', '.'));
-                    if (!isNaN(floatVal)) {
-                      setCurrentTransaction({
-                        ...currentTransaction,
-                        amountCents: Math.round(floatVal * 100),
-                      });
-                    }
-                  }
+                  setCurrentTransaction({
+                    ...currentTransaction,
+                    amount: text === '' ? 0 : parseFloat(text),
+                  });
                 }
               }}
               placeholder="0.00"

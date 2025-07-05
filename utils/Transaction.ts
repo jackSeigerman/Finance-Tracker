@@ -1,8 +1,8 @@
 export type Transaction = {
-  id: string;
+  id: number;
   description: string;
-  amountCents: number;
-  type: 'income' | 'expense';
+  amount: number;
+  type: string;
   category: string;
   date: string;
 };
@@ -12,8 +12,3 @@ export type Category = {
   label: string;
   icon: string;
 };
-
-// Helper to format cents to string with two decimals
-export function formatCents(amountCents: number): string {
-  return (amountCents / 100).toFixed(2);
-}

@@ -53,26 +53,14 @@ class StorageManager {
 
   // Transaction methods
   async saveTransactions(transactions: Transaction[]): Promise<void> {
-    // Ensure all transactions have integer amountCents
-    const safeTxs = transactions.map(tx => ({
-      ...tx,
-      amountCents: Math.round(Number(tx.amountCents) || 0),
-    }));
-    await this.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(safeTxs));
+    await this.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions));
   }
 
   async loadTransactions(): Promise<Transaction[]> {
     const data = await this.getItem(STORAGE_KEYS.TRANSACTIONS);
     if (data) {
       try {
-        const txs = JSON.parse(data);
-        // Ensure all loaded transactions have integer amountCents
-        return Array.isArray(txs)
-          ? txs.map(tx => ({
-              ...tx,
-              amountCents: Math.round(Number(tx.amountCents) || 0),
-            }))
-          : [];
+        return JSON.parse(data);
       } catch (error) {
         console.error('Error parsing transactions:', error);
       }
@@ -81,13 +69,13 @@ class StorageManager {
   }
 
   // Budget methods
-  async saveBudget(budgetCents: number): Promise<void> {
-    await this.setItem(STORAGE_KEYS.BUDGET, Math.round(budgetCents).toString());
+  async saveBudget(budget: number): Promise<void> {
+    await this.setItem(STORAGE_KEYS.BUDGET, budget.toString());
   }
 
   async loadBudget(): Promise<number> {
     const data = await this.getItem(STORAGE_KEYS.BUDGET);
-    return data ? Math.round(parseFloat(data)) || 0 : 0;
+    return data ? parseFloat(data) || 0 : 0;
   }
 
   // Theme methods
