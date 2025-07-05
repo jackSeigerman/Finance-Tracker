@@ -38,14 +38,14 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ visible, onClose, setBudget, 
       <View style={[styles.overlay, { backgroundColor: theme.overlay }]}>        
         <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>          
           <View style={[styles.header, { borderBottomColor: theme.border }]}>            
-            <Text style={[styles.title, { color: theme.text }]}>Set Monthly Budget</Text>
+            <Text style={[styles.title, { color: theme.text }]}>Set Budget</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color={theme.textSecondary} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.content}>
-            <Text style={[styles.label, { color: theme.text }]}>Monthly Budget Amount</Text>
+            <Text style={[styles.label, { color: theme.text }]}>Budget Amount</Text>
             <TextInput
               style={[styles.input, {
                 backgroundColor: theme.inputBackground,
