@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     zIndex: 999,
   },
+
   errorText: {
     color: "#fff",
     flex: 1,
