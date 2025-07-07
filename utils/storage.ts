@@ -1,5 +1,3 @@
-// Note: You'll need to install @react-native-async-storage/async-storage
-// Run: npx expo install @react-native-async-storage/async-storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import { Transaction } from './Transaction';
@@ -10,6 +8,8 @@ const STORAGE_KEYS = {
   BUDGET: 'finance_manager_budget',
   THEME: 'finance_manager_theme',
   FOLLOW_SYSTEM: 'finance_manager_follow_system',
+  CURRENCY: 'finance_manager_currency',
+  CURRENCY_AFTER: 'finance_manager_currency_after',
 };
 
 // Cross-platform storage utility
@@ -113,6 +113,33 @@ class StorageManager {
     return true; // Default to true
   }
 
+  // Currency methods
+  async saveCurrency(currency: string): Promise<void> {
+    await this.setItem(STORAGE_KEYS.CURRENCY, currency);
+  }
+
+  async loadCurrency(): Promise<string> {
+    const data = await this.getItem(STORAGE_KEYS.CURRENCY);
+    return data || 'USD'; // Default to USD
+  }
+
+  // Currency placement methods
+  async saveCurrencyAfter(after: boolean): Promise<void> {
+    await this.setItem(STORAGE_KEYS.CURRENCY_AFTER, JSON.stringify(after));
+  }
+
+  async loadCurrencyAfter(): Promise<boolean> {
+    const data = await this.getItem(STORAGE_KEYS.CURRENCY_AFTER);
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (error) {
+        console.error('Error parsing currency placement:', error);
+      }
+    }
+    return false; // Default to currency before amount
+  }
+
   // Clear all data
   async clearAll(): Promise<void> {
     await Promise.all([
@@ -120,6 +147,8 @@ class StorageManager {
       this.removeItem(STORAGE_KEYS.BUDGET),
       this.removeItem(STORAGE_KEYS.THEME),
       this.removeItem(STORAGE_KEYS.FOLLOW_SYSTEM),
+      this.removeItem(STORAGE_KEYS.CURRENCY),
+      this.removeItem(STORAGE_KEYS.CURRENCY_AFTER),
     ]);
   }
 }
