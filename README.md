@@ -1,3 +1,10 @@
+# Expensely
+
+Expensely helps you track your finances. Set budgets, see your spending history, and more. Managing your finances never looked so good.
+
+
+Now available on the [iOS App Store](http://apps.apple.com/us/app/expensely/id6747648173) 🎉
+
 ## Get started
 
 1. Install dependencies
