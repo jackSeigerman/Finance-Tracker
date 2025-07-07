@@ -27,15 +27,26 @@ export const getCurrencyByCode = (code: string): CurrencyOption => {
   return CURRENCIES.find(currency => currency.code === code) || CURRENCIES[0];
 };
 
+export const getCurrencySymbol = (code: string): string => {
+  return getCurrencyByCode(code).symbol;
+};
+
 export const formatCurrency = (
   amount: number | string,
   currencyCode: string = 'USD',
   symbolAfter: boolean = false
 ): string => {
   const value = parseFloat(amount.toString()).toFixed(2);
-  const currency = getCurrencyByCode(currencyCode);
+  const symbol = getCurrencySymbol(currencyCode);
   
   return symbolAfter
-    ? `${value} ${currency.symbol}`
-    : `${currency.symbol}${value}`;
+    ? `${value} ${symbol}`
+    : `${symbol}${value}`;
+};
+export const getCurrencyFormatExample = (
+  currencyCode: string,
+  symbolAfter: boolean = false
+): string => {
+  const symbol = getCurrencySymbol(currencyCode);
+  return symbolAfter ? `100 ${symbol}` : `${symbol}100`;
 };
