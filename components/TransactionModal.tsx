@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 import { Transaction } from '@/utils/Transaction';
+import { formatCurrency } from '../utils/format';
 
 interface TransactionModalProps {
   visible: boolean;
@@ -38,7 +39,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   setCurrentTransaction,
   onSave,
 }) => {
-  const { theme } = useTheme();
+  const { theme, currency, currencyAfter } = useTheme();
 
   // Local state for amount input as string
   const [amountInput, setAmountInput] = React.useState(
@@ -85,7 +86,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               placeholderTextColor={theme.textTertiary}
             />
 
-            <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
+            <Text style={[styles.label, { color: theme.text }]}>
+              Amount ({currencyAfter ? `100 ${getCurrencySymbol(currency)}` : `${getCurrencySymbol(currency)} 100`})
+            </Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
               value={amountInput}
@@ -179,6 +182,29 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       </View>
     </Modal>
   );
+};
+
+const getCurrencySymbol = (currencyCode: string): string => {
+  const CURRENCY_MAP: {[key: string]: string} = {
+    'USD': '$',
+    'EUR': '€',
+    'GBP': '£',
+    'JPY': '¥',
+    'CHF': '₣',
+    'CNY': '¥',
+    'INR': '₹',
+    'RUB': '₽',
+    'ZAR': 'R',
+    'KRW': '₩',
+    'TRY': '₺',
+    'THB': '฿',
+    'KWD': 'د.ك',
+    'ILS': '₪',
+    'AUD': '$',
+    'CAD': '$',
+  };
+  
+  return CURRENCY_MAP[currencyCode] || '$';
 };
 
 const styles = StyleSheet.create({
