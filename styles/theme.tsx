@@ -41,6 +41,10 @@ interface ThemeContextType {
   isLoading: boolean;
   followSystem: boolean;
   toggleFollowSystem: () => void;
+  currency: string;
+  setCurrency: (currency: string) => void;
+  currencyAfter: boolean;
+  toggleCurrencyPosition: () => void;
 }
 
 // Create the context
@@ -51,6 +55,8 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [followSystem, setFollowSystem] = useState(true);
+  const [currency, setCurrencyState] = useState('USD');
+  const [currencyAfter, setCurrencyAfter] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Determine theme based on followSystem and system color scheme
@@ -60,20 +66,25 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   // Load theme preference on mount
   useEffect(() => {
-    const loadTheme = async () => {
+    const loadSettings = async () => {
       try {
         const savedTheme = await storageManager.loadTheme();
         const savedFollowSystem = await storageManager.loadFollowSystem?.();
+        const savedCurrency = await storageManager.loadCurrency();
+        const savedCurrencyAfter = await storageManager.loadCurrencyAfter();
+        
         setIsDarkMode(savedTheme);
         setFollowSystem(savedFollowSystem ?? true);
+        setCurrencyState(savedCurrency);
+        setCurrencyAfter(savedCurrencyAfter);
       } catch (error) {
-        console.error('Error loading theme:', error);
+        console.error('Error loading settings:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadTheme();
+    loadSettings();
   }, []);
 
   // Listen to system theme changes if following system
@@ -108,6 +119,25 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
+  const setCurrency = async (newCurrency: string) => {
+    setCurrencyState(newCurrency);
+    try {
+      await storageManager.saveCurrency(newCurrency);
+    } catch (error) {
+      console.error('Error saving currency:', error);
+    }
+  };
+
+  const toggleCurrencyPosition = async () => {
+    const newPosition = !currencyAfter;
+    setCurrencyAfter(newPosition);
+    try {
+      await storageManager.saveCurrencyAfter(newPosition);
+    } catch (error) {
+      console.error('Error saving currency position:', error);
+    }
+  };
+
   useEffect(() => {
     if (!isLoading) {
       Animated.timing(fadeAnim, {
@@ -127,6 +157,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       isLoading,
       followSystem,
       toggleFollowSystem,
+      currency,
+      setCurrency,
+      currencyAfter,
+      toggleCurrencyPosition,
     }}>
       {isLoading ? (
         <View style={styles.loadingContainer}>

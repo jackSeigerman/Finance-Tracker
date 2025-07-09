@@ -19,7 +19,7 @@ interface BudgetModalProps {
 }
 
 const BudgetModal: React.FC<BudgetModalProps> = ({ visible, onClose, setBudget, currentBudget }) => {
-  const { theme } = useTheme();
+  const { theme, currency, currencyAfter } = useTheme();
   const [budgetInput, setBudgetInput] = useState('');
 
   const handleSetBudget = () => {
@@ -65,7 +65,7 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ visible, onClose, setBudget, 
             />
             {currentBudget > 0 && (
               <Text style={[styles.currentBudget, { color: theme.textSecondary }]}>                
-                Current Budget: {formatCurrency(currentBudget)}
+                Current Budget: {formatCurrency(currentBudget, currency, currencyAfter)}
               </Text>
             )}
           </View>

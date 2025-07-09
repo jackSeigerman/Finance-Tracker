@@ -12,7 +12,7 @@ interface OverviewProps {
 }
 
 const Overview: React.FC<OverviewProps> = ({ transactions, budget }) => {
-  const { theme } = useTheme();
+  const { theme, currency, currencyAfter } = useTheme();
 
   const income = transactions
     .filter(t => t.type === 'income')
@@ -33,13 +33,17 @@ const Overview: React.FC<OverviewProps> = ({ transactions, budget }) => {
         <View style={[styles.card, { backgroundColor: theme.inputBackground }]}>          
           <Ionicons name="trending-up" size={24} color={theme.incomeColor} />
           <Text style={[styles.label, { color: theme.textSecondary }]}>Income</Text>
-          <Text style={[styles.amount, { color: theme.incomeColor }]}>{formatCurrency(income)}</Text>
+          <Text style={[styles.amount, { color: theme.incomeColor }]}>
+            {formatCurrency(income, currency, currencyAfter)}
+          </Text>
         </View>
 
         <View style={[styles.card, { backgroundColor: theme.inputBackground }]}>          
           <Ionicons name="trending-down" size={24} color={theme.expenseColor} />
           <Text style={[styles.label, { color: theme.textSecondary }]}>Expenses</Text>
-          <Text style={[styles.amount, { color: theme.expenseColor }]}>{formatCurrency(expenses)}</Text>
+          <Text style={[styles.amount, { color: theme.expenseColor }]}>
+            {formatCurrency(expenses, currency, currencyAfter)}
+          </Text>
         </View>
       </View>
 
@@ -50,20 +54,22 @@ const Overview: React.FC<OverviewProps> = ({ transactions, budget }) => {
             color: balance >= 0 ? theme.incomeColor : theme.expenseColor,
           }]}
         >
-          {formatCurrency(balance)}
+          {formatCurrency(balance, currency, currencyAfter)}
         </Text>
       </View>
 
       {budget > 0 && (
         <View style={[styles.budgetContainer, { backgroundColor: theme.inputBackground }]}>          
-          <Text style={[styles.budgetLabel, { color: theme.text }]}>Budget: {formatCurrency(budget)}</Text>
+          <Text style={[styles.budgetLabel, { color: theme.text }]}>
+            Budget: {formatCurrency(budget, currency, currencyAfter)}
+          </Text>
           <Text
             style={{
               color: budgetRemaining >= 0 ? theme.incomeColor : theme.expenseColor,
               marginBottom: 12,
             }}
           >
-            Remaining: {formatCurrency(budgetRemaining)}
+            Remaining: {formatCurrency(budgetRemaining, currency, currencyAfter)}
           </Text>
           <View style={[styles.budgetBar, { backgroundColor: theme.border }]}>            
             <View

@@ -35,7 +35,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 const TransactionsList: React.FC<TransactionsListProps> = ({ transactions, onEdit, onDelete, onAdd }) => {
-  const { theme } = useTheme();
+  const { theme, currency, currencyAfter } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.cardBackground }]}>      
@@ -81,7 +81,8 @@ const TransactionsList: React.FC<TransactionsListProps> = ({ transactions, onEdi
                   color: transaction.type === 'income' ? theme.incomeColor : theme.expenseColor,
                 }]}
               >
-                {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                {transaction.type === 'income' ? '+' : '-'}
+                {formatCurrency(transaction.amount, currency, currencyAfter)}
               </Text>
               <View style={styles.actions}>
                 <TouchableOpacity onPress={() => onEdit(transaction)}>

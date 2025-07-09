@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../styles/theme';
 import { Transaction } from '@/utils/Transaction';
+import { formatCurrency, getCurrencyFormatExample } from '../utils/format';
 
 interface TransactionModalProps {
   visible: boolean;
@@ -38,7 +39,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   setCurrentTransaction,
   onSave,
 }) => {
-  const { theme } = useTheme();
+  const { theme, currency, currencyAfter } = useTheme();
 
   // Local state for amount input as string
   const [amountInput, setAmountInput] = React.useState(
@@ -85,7 +86,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               placeholderTextColor={theme.textTertiary}
             />
 
-            <Text style={[styles.label, { color: theme.text }]}>Amount</Text>
+            <Text style={[styles.label, { color: theme.text }]}>
+              Amount ({getCurrencyFormatExample(currency, currencyAfter)})
+            </Text>
             <TextInput
               style={[styles.input, { backgroundColor: theme.inputBackground, color: theme.text, borderColor: theme.border }]}
               value={amountInput}

@@ -10,7 +10,7 @@ import { useTransactions } from '../hooks/useTransactions';
 import { useTheme } from '../styles/theme';
 
 const FinanceManager = () => {
-  const { theme, isLoading: themeLoading } = useTheme();
+  const { theme, isLoading: themeLoading, currency, currencyAfter } = useTheme();
   const {
     transactions,
     budget,
@@ -47,6 +47,8 @@ const FinanceManager = () => {
           onEdit={transactionHandlers.editTransaction}
           onDelete={transactionHandlers.deleteTransaction}
           onAdd={() => setModalVisible(true)}
+          currency={currency}
+          currencyAfter={currencyAfter}
         />
       </ScrollView>
 
@@ -55,6 +57,8 @@ const FinanceManager = () => {
         onClose={() => setModalVisible(false)}
         {...transactionHandlers}
         onSave={transactionHandlers.addOrUpdateTransaction}
+        currency={currency}
+        currencyAfter={currencyAfter}
       />
 
       <BudgetModal
